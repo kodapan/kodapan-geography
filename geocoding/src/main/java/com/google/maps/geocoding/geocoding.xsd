@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="GeocodeResponse" type="GeocodeResponse"/>
+  <xs:complexType name="address_componentType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="long_name"/>
+      <xs:element type="xs:string" name="short_name"/>
+      <xs:element type="xs:string" name="type" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="envelopeType">
+    <xs:sequence>
+      <xs:element type="latLngType" name="southwest"/>
+      <xs:element type="latLngType" name="northeast"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="geometryType">
+    <xs:sequence>
+      <xs:element type="latLngType" name="location"/>
+      <xs:element type="xs:string" name="location_type"/>
+      <xs:element type="envelopeType" name="viewport"/>
+      <xs:element type="envelopeType" name="bounds" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GeocodeResponse">
+    <xs:sequence>
+      <xs:element type="xs:string" name="status"/>
+      <xs:element type="resultType" name="results" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="latLngType">
+    <xs:sequence>
+      <xs:element type="xs:float" name="lat"/>
+      <xs:element type="xs:float" name="lng"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="resultType">
+    <xs:sequence>
+      <xs:element type="xs:boolean" name="partial_match" maxOccurs="1" minOccurs="0"/>
+      <xs:element type="xs:string" name="type"/>
+      <xs:element type="xs:string" name="formatted_address"/>
+      <xs:element type="address_componentType" name="address_component" maxOccurs="unbounded" minOccurs="0"/>
+      <xs:element type="geometryType" name="geometry"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
