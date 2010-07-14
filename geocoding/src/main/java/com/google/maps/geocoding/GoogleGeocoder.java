@@ -24,7 +24,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLFilterImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
 import se.kodapan.collections.MapSet;
-import se.kodapan.io.HttpGetReader;
+import se.kodapan.io.http.HttpGetReader;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;

@@ -16,7 +16,6 @@
 
 package se.kodapan.geography.geocoding;
 
-import com.google.maps.geocoding.*;
 import junit.framework.TestCase;
 import org.junit.Test;
 import se.kodapan.geography.core.PolygonTools;

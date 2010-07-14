@@ -14,4 +14,12 @@
 
   <packaging>jar</packaging>
 
+  <dependencies>
+    <dependency>
+      <groupId>se.kodapan.common</groupId>
+      <artifactId>common</artifactId>
+      <version>0.1</version>
+    </dependency>
+  </dependencies>
+
 </project>

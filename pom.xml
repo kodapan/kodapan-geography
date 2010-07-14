@@ -17,17 +17,10 @@
   <dependencies>
 
     <dependency>
-      <groupId>se.kodapan.commons</groupId>
-      <artifactId>io</artifactId>
+      <groupId>se.kodapan.common</groupId>
+      <artifactId>common</artifactId>
       <version>0.1</version>
     </dependency>
-
-    <dependency>
-      <groupId>se.kodapan.commons</groupId>
-      <artifactId>collections</artifactId>
-      <version>0.1</version>
-    </dependency>
-
 
     <dependency>
       <groupId>org.slf4j</groupId>
