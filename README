@@ -20,7 +20,7 @@ A circle is a polygon, an envelope is a polygon, all shapes are polygons.
 
 Caveat emptor:
 * Mainly written having in mind almost all map APIs allows for drawing polygons.
-* Spare amount of shapes.
+* Sparse amount of shapes.
 * Is in no way optimized.
 * Distance between two polygons is actually the distance between the two closest points in the polygons
   and might thus in some extreme cases be off with a rather large number.
