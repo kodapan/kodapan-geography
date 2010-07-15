@@ -40,7 +40,6 @@ import java.util.zip.GZIPOutputStream;
 
 /**
  * http://code.google.com/intl/sv-SE/apis/maps/documentation/geocoding/index.html#XMLParsing
- * <p/>
  * http://code.google.com/intl/sv-SE/apis/maps/documentation/geocoding/index.html
  *
  * @author kalle

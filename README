@@ -1,0 +1,40 @@
+Polygon centric geographic tools based on the two following classes:
+
+interface Coordinate {
+  double getLongitude();
+  double getLatitude();
+  double archDistance(Coordinate that);
+}
+
+interface Polygon {
+  Iterator<Coordinate> iterateCoordinates();
+  boolean contains(Coordinate coordinate);
+  boolean contains(Polygon polygon);
+  Coordinate getCentroid();
+  double archDistance(Polygon that);
+  double archDistance(Coordinate that);
+}
+
+A circle is a polygon, an envelope is a polygon, all shapes are polygons.
+(The API does actually not yet contain an implemented circle.)
+
+Caveat emptor:
+* Mainly written having in mind almost all map APIs allows for drawing polygons.
+* Spare amount of shapes.
+* Is in no way optimized.
+* Distance between two polygons is actually the distance between the two closest points in the polygons
+  and might thus in some extreme cases be off with a rather large number.
+  The geocoding envelope for the state of Texas with the geocoding envelope of the country Mexico
+  share lines very close to each other, they might even intersect,
+  but the envelope corners are several hundred km away from each other.
+
+This is currently enough for me. It will be further developed and improved.
+
+There is virtually no documentation but I hope the API is simple enough.
+
+Module geocoding contains an abstract API and a Google XML service implementation, which has the best API examples:
+
+http://github.com/karlwettin/kodapan-geography/blob/master/geocoding/src/test/java/se/kodapan/geography/geocoding/TestGeocoder.java
+
+
+karl.wettin@gmail.com
