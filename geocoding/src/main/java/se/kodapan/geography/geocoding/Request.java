@@ -15,10 +15,10 @@
  */
 package se.kodapan.geography.geocoding;
 
+import se.kodapan.geography.core.Coordinate;
 import se.kodapan.geography.core.Polygon;
 
 import java.io.Serializable;
-import java.util.Set;
 
 /**
  * @author kalle
@@ -28,33 +28,56 @@ public class Request implements Serializable {
 
   private static final long serialVersionUID = 1l;
   
+  /**
+   * required, the primary text query.
+   * multiple components are preferably comma separated: 1 ave, new york, ny, usa.
+   */
   private String textQuery;
 
+  /**
+   * optional, preferred geographic bounds for the area
+   * if supported by the geocoder implementation.
+   */
   private Polygon bounds;
+
+  /**
+   * optional, preferred response language.
+   * if supported by the geocoder implementation.
+   */
   private String language;
-  
+
+  /**
+   * Geocoding time augmentations
+   */
+  private RequestAugmenter augmenter;
 
   public Request() {
+    this(null, null, null);
   }
 
   public Request(String textQuery) {
-    this.textQuery = textQuery;
+    this(textQuery, null, null);
   }
 
   public Request(String textQuery, Polygon bounds) {
-    this.textQuery = textQuery;
-    this.bounds = bounds;
+    this(textQuery, bounds, null);
   }
 
+
   public Request(String textQuery, String language) {
-    this.textQuery = textQuery;
-    this.language = language;
+    this(textQuery, null, language);
   }
 
   public Request(String textQuery, Polygon bounds, String language) {
+    this(textQuery, bounds, language, null);
+  }
+
+
+  public Request(String textQuery, Polygon bounds, String language, RequestAugmenter augmenter) {
     this.textQuery = textQuery;
     this.bounds = bounds;
     this.language = language;
+    this.augmenter = augmenter;
   }
 
   public String getTextQuery() {
@@ -81,6 +104,14 @@ public class Request implements Serializable {
     this.language = language;
   }
 
+  public RequestAugmenter getAugmenter() {
+    return augmenter;
+  }
+
+  public void setAugmenter(RequestAugmenter augmenter) {
+    this.augmenter = augmenter;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -89,6 +120,7 @@ public class Request implements Serializable {
     Request request = (Request) o;
 
     if (bounds != null ? !bounds.equals(request.bounds) : request.bounds != null) return false;
+    if (augmenter != null ? !augmenter.equals(request.augmenter) : request.augmenter != null) return false;
     if (language != null ? !language.equals(request.language) : request.language != null) return false;
     if (textQuery != null ? !textQuery.equals(request.textQuery) : request.textQuery != null) return false;
 
@@ -100,6 +132,7 @@ public class Request implements Serializable {
     int result = textQuery != null ? textQuery.hashCode() : 0;
     result = 31 * result + (bounds != null ? bounds.hashCode() : 0);
     result = 31 * result + (language != null ? language.hashCode() : 0);
+    result = 31 * result + (augmenter != null ? augmenter.hashCode() : 0);
     return result;
   }
 
@@ -109,6 +142,7 @@ public class Request implements Serializable {
         "textQuery='" + textQuery + '\'' +
         ", bounds=" + bounds +
         ", language='" + language + '\'' +
+        ", augmenter=" + augmenter +
         '}';
   }
 }

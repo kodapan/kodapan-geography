@@ -24,11 +24,11 @@ import java.util.*;
  * @author kalle
  * @since 2010-jun-22 19:38:40
  */
-public class ProximityScorer extends ResponseFilter {
+public class ProximityScorer extends ResultsScorer {
 
   private Map<Polygon, Double> areaWeights;
 
-  public void addAll(Collection<Polygon> polygons) {
+  public void addAll(Collection<? extends Polygon> polygons) {
     for (Polygon polygon : polygons) {
       add(polygon);
     }
@@ -39,24 +39,35 @@ public class ProximityScorer extends ResponseFilter {
     areaWeights.put(polygon, 1d);
   }
 
-  public ProximityScorer(Geocoding input) {
-    this(input, new HashMap<Polygon, Double>());
+  public ProximityScorer() {
+    this(new HashMap<Polygon, Double>());
   }
 
-  public ProximityScorer(Geocoding input, Map<Polygon, Double> areaWeights) {
-    super(input);
+  public ProximityScorer(Polygon... areas) {
+    this(Arrays.asList(areas));
+  }
+
+  public ProximityScorer(Iterable<? extends Polygon> areaWeights) {
+    this.areaWeights = new HashMap<Polygon, Double>();
+    for (Polygon polygon : areaWeights) {
+      this.areaWeights.put(polygon, 1d);
+    }
+  }
+
+  public ProximityScorer(Map<Polygon, Double> areaWeights) {
     this.areaWeights = areaWeights;
   }
 
-  @Override
-  public Geocoding filter() throws Exception {
 
-    if (input.getResults().size() > 0) {
+  @Override
+  public void score(Geocoding geocoding) throws Exception {
+
+    if (geocoding.getResults().size() > 0) {
       Map<Result, Double> distances = new HashMap<Result, Double>();
       double kmFurthestAway = Double.MIN_VALUE;
       double kmClosest = Double.MAX_VALUE;
 
-      for (final Result result : input.getResults()) {
+      for (final Result result : geocoding.getResults()) {
 
         double kmClosestArea = Double.MAX_VALUE;
 
@@ -103,7 +114,7 @@ public class ProximityScorer extends ResponseFilter {
 
         double factor = 1d / kmFurthestAway;
 
-        for (Result result : input.getResults()) {
+        for (Result result : geocoding.getResults()) {
           double distance = distances.get(result);
           double score = kmFurthestAway - distance;
           score *= factor;
@@ -113,9 +124,7 @@ public class ProximityScorer extends ResponseFilter {
 
     }
 
-    Collections.sort(input.getResults(), Result.scoreComparator);
-
-    return input;
+    Collections.sort(geocoding.getResults(), Result.scoreComparator);
   }
 
 

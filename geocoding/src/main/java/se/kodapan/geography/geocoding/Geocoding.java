@@ -15,16 +15,13 @@
  */
 package se.kodapan.geography.geocoding;
 
-import se.kodapan.collections.MapSet;
 import se.kodapan.geography.core.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * decorates the successful result.
- *
  *
  * @author kalle
  * @since 2010-jun-22 19:58:24
@@ -32,7 +29,7 @@ import java.util.List;
 public class Geocoding extends AbstractPolygonDecorator implements Result, Coordinate, Serializable {
 
   private static final long serialVersionUID = 1l;
-  
+
   /**
    * if true then this Response instance is the named geocoded polygon.
    */
@@ -42,12 +39,83 @@ public class Geocoding extends AbstractPolygonDecorator implements Result, Coord
 
   private List<Result> results = new ArrayList<Result>();
 
+  public void mergeResults(Geocoding geocoding) {
+    for (Result result : geocoding.getResults()) {
+      mergeResult(result);
+    }
+  }
+
+  /**
+   * results that equal to something already in the geocoding will not be replaced.
+   *
+   * @param result the instance to be added
+   * @return the instance now bound to this geocoding
+   */
+  public Result mergeResult(Result result) {
+    int index = results.indexOf(result);
+    if (index > -1) {
+      result = results.get(index);
+    } else {
+      results.add(result);
+    }
+    return result;
+  }
+
+  public AddressComponents gatherCommonDenominatorsFromResults() {
+    HashSet<AddressComponent> allHas = new LinkedHashSet<AddressComponent>();
+    HashSet<AddressComponent> allHasNot = new HashSet<AddressComponent>();
+    for (Result result : getResults()) {
+      for (AddressComponent component : result.getAddressComponents()) {
+        if (allHas.contains(component) || allHasNot.contains(component)) {
+          continue;
+        }
+        boolean allHasThis  =true;
+        for (Result result2 : getResults()) {
+          if (result == result2) {
+            continue;
+          }
+          if (!result2.getAddressComponents().contains(component)) {
+            allHasThis = false;
+            break;
+          }
+        }
+        if (allHasThis) {
+          allHas.add(component);
+        }
+      }
+    }
+    AddressComponents result = new AddressComponents();
+    result.addAll(allHas);
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Geocoding geocoding = (Geocoding) o;
+
+    if (success != geocoding.success) return false;
+    if (getFormattedAddress() != null ? !getFormattedAddress().equals(geocoding.getFormattedAddress()) : geocoding.getFormattedAddress() != null)
+      return false;
+    if (getLocation() != null ? !getLocation().equals(geocoding.getLocation()) : geocoding.getLocation() != null)
+      return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return (success ? 1 : 0);
+  }
+
   public boolean contains(Geocoding geocoding) {
-    return contains((Polygon)geocoding);
+    return contains((Polygon) geocoding);
   }
 
   public double archDistance(Geocoding that) {
-    return archDistance((Polygon)that);
+    return archDistance((Polygon) that);
   }
 
 
@@ -72,28 +140,23 @@ public class Geocoding extends AbstractPolygonDecorator implements Result, Coord
   }
 
   @Override
-  public AddressComponent findAddressComponentByType(AddressComponentType... type) {
-    return ResultTool.findAddressComponentByType(this, type);
-  }
-  
-  @Override
   public Polygon getDecoratedPolygon() {
-      return getDecoratedResult().accept(new ResultVisitor<Polygon>(){
-        @Override
-        public Polygon visit(Coordinate location) {
-          return new AbstractSingleCoordinatePolygon(location){
-            @Override
-            public String getPolygonName() {
-              return getDecoratedResult().getFormattedAddress();
-            }
-          };
-        }
+    return getDecoratedResult().accept(new ResultVisitor<Polygon>() {
+      @Override
+      public Polygon visit(Coordinate location) {
+        return new AbstractSingleCoordinatePolygon(location) {
+          @Override
+          public String getPolygonName() {
+            return getDecoratedResult().getFormattedAddress();
+          }
+        };
+      }
 
-        @Override
-        public Polygon visit(Polygon bounds) {
-          return bounds;
-        }
-      });
+      @Override
+      public Polygon visit(Polygon bounds) {
+        return bounds;
+      }
+    });
   }
 
   @Override
@@ -105,7 +168,15 @@ public class Geocoding extends AbstractPolygonDecorator implements Result, Coord
     }
   }
 
+  @Override
+  public AddressComponents getAddressComponents() {
+    return getDecoratedResult().getAddressComponents();
+  }
 
+  @Override
+  public void setAddressComponents(AddressComponents addressComponents) {
+    getDecoratedResult().setAddressComponents(addressComponents);
+  }
 
   public boolean isSuccess() {
     return success;
@@ -185,16 +256,6 @@ public class Geocoding extends AbstractPolygonDecorator implements Result, Coord
   }
 
   @Override
-  public MapSet<AddressComponentType, AddressComponent> getAddressComponentsByType() {
-    return getDecoratedResult().getAddressComponentsByType();
-  }
-
-  @Override
-  public void setAddressComponentsByType(MapSet<AddressComponentType, AddressComponent> addressComponentsByType) {
-    getDecoratedResult().setAddressComponentsByType(addressComponentsByType);
-  }
-
-  @Override
   public Precision getPrecision() {
     return getDecoratedResult().getPrecision();
   }
@@ -225,13 +286,8 @@ public class Geocoding extends AbstractPolygonDecorator implements Result, Coord
   }
 
   @Override
-  public List<AddressComponent> getAddressComponents() {
-    return getDecoratedResult().getAddressComponents();
-  }
-
-  @Override
-  public void setAddressComponents(List<AddressComponent> addressComponents) {
-    getDecoratedResult().setAddressComponents(addressComponents);
+  public void setFormattedAddress(Locale locale) {
+    throw new UnsupportedOperationException();
   }
 }
 

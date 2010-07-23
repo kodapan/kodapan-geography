@@ -34,7 +34,13 @@ public class PolygonTools {
   /**
    * @return the smallest polygon that contain all smaller polygons.
    */
-  public static Polygon findSmallestEnclosingBounds(Collection<Polygon> input) {
+  public static Polygon findSmallestEnclosingBounds(Collection<? extends Polygon> input) {
+    if (input.size() == 0) {
+      return null;
+    }
+    if (input.size() == 1) {
+      return input.iterator().next();
+    }
     List<Polygon> list = new ArrayList<Polygon>(input);
     Collections.sort(list, new Comparator<Polygon>() {
       @Override
@@ -42,6 +48,8 @@ public class PolygonTools {
         return polygon.equals(polygon1) ? 0 : polygon.contains(polygon1) ? -1 : 1;
       }
     });
+
+    // find the chain where next link is still contained by previous link.
     boolean found = false;
     int i = 0;
     while (i < list.size()) {
@@ -55,6 +63,9 @@ public class PolygonTools {
         break;
       }
       i++;
+    }
+    if (i == 0) {
+      return null;
     }
     list = list.subList(0, i);
     return list.get(i-1);

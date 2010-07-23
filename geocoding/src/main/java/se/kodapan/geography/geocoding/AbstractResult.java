@@ -23,10 +23,6 @@ public abstract class AbstractResult implements Result {
 
   private static final long serialVersionUID = 1l;  
 
-  @Override
-  public AddressComponent findAddressComponentByType(AddressComponentType... type) {
-    return ResultTool.findAddressComponentByType(this, type);
-  }
 
   @Override
   public boolean equals(Object o) {

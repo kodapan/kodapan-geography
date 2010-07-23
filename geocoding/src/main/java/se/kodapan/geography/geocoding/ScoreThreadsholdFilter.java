@@ -21,34 +21,37 @@ import java.util.Iterator;
  * @author kalle
  * @since 2010-jun-24 00:08:57
  */
-public class ScoreThreadsholdFilter extends ResponseFilter {
+public class ScoreThreadsholdFilter extends ResultsScorer {
 
   public static final double defaultThreadshold = 0.7d;
 
   private double threadshold;
 
-  public ScoreThreadsholdFilter(Geocoding input) {
-    this(input, defaultThreadshold);
+  public ScoreThreadsholdFilter() {
+    this(defaultThreadshold);
   }
 
-  public ScoreThreadsholdFilter(Geocoding input, double threadshold) {
-    super(input);
+  public ScoreThreadsholdFilter(double threadshold) {
     this.threadshold = threadshold;
   }
 
   @Override
-  public Geocoding filter() throws Exception {
-    if (input.getResults().size() > 1 && input.getResults().get(0).getScore() > 0d) {
-      double factor = 1d / input.getResults().get(0).getScore();
-      for (Iterator<Result> it = input.getResults().iterator(); it.hasNext();) {
-        Result result = it.next();
-        if (result.getScore() * factor < threadshold) {
-          it.remove();
+  public void score(Geocoding geocoding) throws Exception {
+    int threadsholdIndex = geocoding.getResults().size();
+    if (geocoding.getResults().size() > 1 && geocoding.getResults().get(0).getScore() > 0d) {
+      double topScore = geocoding.getResults().get(0).getScore();
+      java.util.List<Result> results = geocoding.getResults();
+      for (int i = 1, resultsSize = results.size(); i < resultsSize; i++) {
+        Result result = results.get(i);
+        if (result.getScore() / topScore <= threadshold) {
+          threadsholdIndex = i;
+          break;
         }
       }
+      if (threadsholdIndex == 1) {
+        geocoding.setSuccess(true);
+      }      
     }
-    input.setSuccess(input.getResults().size() == 1);
-    return input;
   }
 
 }

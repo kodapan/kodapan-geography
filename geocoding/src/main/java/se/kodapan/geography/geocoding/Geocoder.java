@@ -17,10 +17,8 @@ package se.kodapan.geography.geocoding;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import se.kodapan.geography.core.Coordinate;
 import se.kodapan.geography.core.Polygon;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author kalle
@@ -30,6 +28,20 @@ public abstract class Geocoder {
 
   protected static final Logger log = LoggerFactory.getLogger(Geocoder.class);
 
+  /**
+   * reverse geocoding
+   * 
+   * @param coordinate
+   * @return
+   * @throws Exception
+   */
+  public abstract Geocoding geocode(Coordinate coordinate, String preferredLanguage) throws Exception;
+
+
+  public Geocoding geocode(Coordinate coordinate) throws Exception {
+    return geocode(coordinate, null);
+  }
+
   public Geocoding geocode(String textQuery) throws Exception {
     return geocode(new Request(textQuery));
   }
@@ -38,19 +50,23 @@ public abstract class Geocoder {
     return geocode(new Request(textQuery, bounds));
   }
 
-
-
-  public Geocoding geocode(Request request) throws Exception {
-    return geocode(request, new HashMap<Request, Geocoding>());
+  public final Geocoding geocode(Request request) throws Exception {
+    Geocoding geocoding = doGeocode(request);
+    // todo add debug level (test scope) checking that this geocoding has not been touched by the filter!
+    if (request.getAugmenter() != null) {
+      Geocoding response = request.getAugmenter().filter(this, request, geocoding);
+      if (response != null) {
+        geocoding = response;
+      }
+    }
+    return geocoding;
   }
 
   /**
-   *
    * @param request
-   * @param cache avoids eternal loops when executing sub-geocoding on address components
    * @return
    * @throws Exception
    */
-  public abstract Geocoding geocode(Request request, Map<Request, Geocoding> cache) throws Exception;
+  protected abstract Geocoding doGeocode(Request request) throws Exception;
 
 }

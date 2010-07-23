@@ -15,16 +15,22 @@
  */
 package se.kodapan.geography.geocoding;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.kodapan.io.SerializableTool;
+
 /**
  * @author kalle
  * @since 2010-jun-22 23:10:11
  */
 public abstract class ResponseFilter  {
 
-  protected Geocoding input;
+  protected static final Logger log = LoggerFactory.getLogger(ResponseFilter.class);
 
-  protected ResponseFilter(Geocoding input) {
-    this.input = input;
+  protected Geocoding geocoding;
+
+  protected ResponseFilter(Geocoding geocoding) {
+    this.geocoding = SerializableTool.clone(geocoding);
   }
 
   public abstract Geocoding filter() throws Exception;

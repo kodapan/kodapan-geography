@@ -20,10 +20,7 @@ import se.kodapan.geography.core.Coordinate;
 import se.kodapan.geography.core.Envelope;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author kalle
@@ -45,28 +42,10 @@ public interface Result extends Serializable {
     }
   };
 
-  public static class ResultTool {
-    public static AddressComponent findAddressComponentByType(Result result, AddressComponentType... type) {
-      List<AddressComponentType> list = Arrays.asList(type);
-      Set<AddressComponent> set = result.getAddressComponentsByType().get(type[0]);
-      if (set != null && set.size() > 0) {
-        AddressComponent found = null;
-        for (AddressComponent component : set) {
-          if (component.getTypes().containsAll(list)) {
-            if (found != null) {
-              throw new RuntimeException("More than one AddressComponent matches " + list);
-            }
-            found = component;
-          }
-        }
-        return found;
-      } else {
-        return null;
-      }
-    }
 
-  }
+  public abstract void setFormattedAddress(Locale locale);
 
+  
   public abstract <T> T accept(ResultVisitor<T> visitor);
 
   public abstract Envelope getBounds();
@@ -81,15 +60,6 @@ public interface Result extends Serializable {
 
   public abstract void setLocation(Coordinate location);
 
-  public abstract AddressComponent findAddressComponentByType(AddressComponentType... type);
-
-  /**
-   * values are updated at geocoding time, consider this immutable.
-   */
-  public abstract MapSet<AddressComponentType, AddressComponent> getAddressComponentsByType();
-
-  public abstract void setAddressComponentsByType(MapSet<AddressComponentType, AddressComponent> addressComponentsByType);
-
   public abstract Precision getPrecision();
 
   public abstract void setPrecision(Precision precision);
@@ -102,7 +72,9 @@ public interface Result extends Serializable {
 
   public abstract void setFormattedAddress(String formattedAddress);
 
-  public abstract List<AddressComponent> getAddressComponents();
+  public abstract AddressComponents getAddressComponents();
 
-  public abstract void setAddressComponents(List<AddressComponent> addressComponents);
+  public abstract void setAddressComponents(AddressComponents addressComponents);
+
+
 }

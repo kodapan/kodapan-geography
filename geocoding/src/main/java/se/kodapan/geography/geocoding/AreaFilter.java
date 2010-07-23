@@ -50,7 +50,7 @@ public class AreaFilter extends ResponseFilter {
   @Override
   public Geocoding filter() throws Exception {
     Logic logic = new Logic();
-    for (Iterator<Result> it = input.getResults().iterator(); it.hasNext();) {
+    for (Iterator<Result> it = geocoding.getResults().iterator(); it.hasNext();) {
       Result result = it.next();
       boolean found = false;
       for (Polygon area : areas) {
@@ -65,9 +65,9 @@ public class AreaFilter extends ResponseFilter {
       }
     }
 
-    input.setSuccess(input.getResults().size() > 0);
+    geocoding.setSuccess(geocoding.getResults().size() > 0);
 
-    return input;
+    return geocoding;
   }
 
   public class Logic implements ResultVisitor<Boolean> {

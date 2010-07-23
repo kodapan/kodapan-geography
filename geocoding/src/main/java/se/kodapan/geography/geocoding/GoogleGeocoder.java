@@ -15,14 +15,14 @@
  */
 package se.kodapan.geography.geocoding;
 
+import com.google.maps.geocoding.*;
 import com.google.maps.geocoding.AddressComponent;
-import com.google.maps.geocoding.GeocodeResponse;
-import com.google.maps.geocoding.LatLng;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kodapan.geography.core.*;
+import se.kodapan.geography.core.Envelope;
 
-import java.util.Map;
+import java.io.IOException;
 
 /**
  * @author kalle
@@ -43,15 +43,25 @@ public class GoogleGeocoder extends Geocoder {
     this.geocoder = geocoder;
   }
 
-  @Override
-  public Geocoding geocode(Request request, Map<Request, Geocoding> cache) throws Exception {
+  public Geocoding geocode(Coordinate coordinate, String preferredLanguage) throws Exception {
 
-    Geocoding geocoding = cache.get(request);
-    if (geocoding != null) {
-      return geocoding;
-    }
-    geocoding = new Geocoding();
-    cache.put(request, geocoding);
+    Geocoding geocoding = new Geocoding();
+
+    // create request
+    com.google.maps.geocoding.Request googleRequest = new com.google.maps.geocoding.Request();
+    googleRequest.setLatLng(new LatLng(coordinate.getLatitude(), coordinate.getLongitude()));
+    googleRequest.setLanguage(preferredLanguage);
+
+    sendRequest(geocoding, googleRequest);
+
+    return geocoding;
+
+  }
+
+  @Override
+  protected Geocoding doGeocode(Request request) throws Exception {
+
+    Geocoding geocoding = new Geocoding();
 
     // create request
     com.google.maps.geocoding.Request googleRequest = new com.google.maps.geocoding.Request();
@@ -65,6 +75,13 @@ public class GoogleGeocoder extends Geocoder {
           new LatLng(envelope.getNorthEast().getLatitude(), envelope.getNorthEast().getLongitude())));
     }
 
+    sendRequest(geocoding, googleRequest);
+
+    return geocoding;
+
+  }
+
+  private void sendRequest(Geocoding geocoding, com.google.maps.geocoding.Request googleRequest) throws IOException {
     // send request
     GeocodeResponse googleResponse = geocoder.geocode(googleRequest);
     geocoding.setServerResponse(googleResponse);
@@ -74,13 +91,17 @@ public class GoogleGeocoder extends Geocoder {
     if (googleResponse.getResults().size() == 0
         || !"OK".equals(googleResponse.getStatus())) {
       geocoding.setSuccess(false);
-      return geocoding;
+
+    } else {
+      parseResponse(geocoding, googleResponse);
     }
 
+  }
 
+  private void parseResponse(Geocoding geocoding, GeocodeResponse googleResponse) {
     for (com.google.maps.geocoding.Result googleResult : googleResponse.getResults()) {
 
-      // todo do something with partial matches      
+      // todo do something with partial matches
 //      if (googleResult.isPartialMatch()) {
 //        if (log.isInfoEnabled()) {
 //          log.info("Skipping partial match result " + googleResult);
@@ -128,25 +149,26 @@ public class GoogleGeocoder extends Geocoder {
       }
 
 
-      if (request.getBounds() != null) {
-        boolean keep;
-        if (result.getLocation() != null) {
-          keep = request.getBounds().contains(result.getLocation());
-        } else if (result.getBounds() != null) {
-          keep = request.getBounds().contains(result.getBounds());
-        } else if (result.getViewPort() != null) {
-          keep = request.getBounds().contains(result.getViewPort());
-        } else {
-          throw new RuntimeException();
-        }
-
-        if (!keep) {
-          if (log.isInfoEnabled()) {
-            log.info("Filtering out " + result + " as it does not match " + request.getBounds());
-          }
-          continue;
-        }
-      }
+      // this should be handled with a filter!
+//      if (request.getBounds() != null) {
+//        boolean keep;
+//        if (result.getLocation() != null) {
+//          keep = request.getBounds().contains(result.getLocation());
+//        } else if (result.getBounds() != null) {
+//          keep = request.getBounds().contains(result.getBounds());
+//        } else if (result.getViewPort() != null) {
+//          keep = request.getBounds().contains(result.getViewPort());
+//        } else {
+//          throw new RuntimeException();
+//        }
+//
+//        if (!keep) {
+//          if (log.isInfoEnabled()) {
+//            log.info("Filtering out " + result + " as it does not match " + request.getBounds());
+//          }
+//          continue;
+//        }
+//      }
 
 
       for (AddressComponent googleComponent : googleResult.getAddressComponents()) {
@@ -154,8 +176,13 @@ public class GoogleGeocoder extends Geocoder {
         addressComponent.setLongName(googleComponent.getLongName());
         addressComponent.setShortName(googleComponent.getShortName());
         for (String type : googleComponent.getTypes()) {
-          addressComponent.getTypes().add(AddressComponentType.valueOf(type));
-          result.getAddressComponentsByType().add(AddressComponentType.valueOf(type), addressComponent);
+          AddressComponentType enumType = null;
+          try {
+            enumType = AddressComponentType.valueOf(type);
+          } catch (Exception e) {
+            enumType = AddressComponentType.unknown;
+          }
+          addressComponent.getTypes().add(enumType);
         }
         result.getAddressComponents().add(addressComponent);
       }
@@ -199,8 +226,6 @@ public class GoogleGeocoder extends Geocoder {
     }
 
     geocoding.setSuccess(geocoding.getResults().size() == 1);
-    return geocoding;
-
   }
 
 

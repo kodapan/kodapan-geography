@@ -89,44 +89,79 @@ public class TestGeocoder extends TestCase {
     // test bounds
 
     Geocoding opgs = geocoder.geocode("Olof palmes gatan 23", stockholm);
-    assertTrue(opgs.isSuccess());
+    assertFalse(opgs.isSuccess());
+    new ProximityScorer(stockholm).score(opgs);
+    new ScoreThreadsholdFilter().score(opgs);
     assertTrue(stockholm.contains(opgs));
 
     Geocoding umeå = geocoder.geocode("Umeå, Sverige");
     assertTrue(umeå.isSuccess());
-    Geocoding opgu = geocoder.geocode("Olof palmes gatan 23", umeå);
+    Geocoding opgu = geocoder.geocode("Olof palmes gatan 23, umeå");
     assertTrue(opgu.isSuccess());
     assertTrue(umeå.contains(opgu));
 
 
     // test proximity scorer
-    ProximityScorer proximityScorer = new ProximityScorer(geocoder.geocode("Olof palmes gatan 23"));
-    proximityScorer.add(stockholm);
-    proximityScorer.add(umeå);
-    Geocoding opg = proximityScorer.filter();
+
+    Geocoding opg = geocoder.geocode("Olof palmes gatan 23");
+    new ProximityScorer(stockholm, umeå).score(opg);
     assertFalse(opg.isSuccess());
 
 
-    proximityScorer = new ProximityScorer(geocoder.geocode("Olof palmes gatan 23"));
-    proximityScorer.add(stockholm);
-    opg = proximityScorer.filter();
-
-    ScoreThreadsholdFilter scoreThreadsholdFilter = new ScoreThreadsholdFilter(opg);
-    opg = scoreThreadsholdFilter.filter();
+    opg = geocoder.geocode("Olof palmes gatan 23");
+    new ProximityScorer(stockholm).score(opg);
+    new ScoreThreadsholdFilter().score(opg);
 
     assertTrue(opg.isSuccess());
     assertTrue(stockholm.contains(opg));
 
     // this will fail
+    // its an address, but it has floor number, says there is an elevator and that it is sold.
     assertFalse(geocoder.geocode("Svalgränd 4, 5 tr, hiss sålt").isSuccess());
     System.currentTimeMillis();
 
 
+    assertEquals(halmstad, PolygonTools.findSmallestEnclosingBounds(halland, halmstad));    
     assertEquals(halmstad, PolygonTools.findSmallestEnclosingBounds(halland, halmstad, sverige));
     assertEquals(halland, PolygonTools.findSmallestEnclosingBounds(halland, halmstad, sverige, laholm));
     assertEquals(laholm, PolygonTools.findSmallestEnclosingBounds(laholm, sverige, halland));
     assertEquals(sverige, PolygonTools.findSmallestEnclosingBounds(halland, stockholm, umeå, halmstad, sverige));
     System.currentTimeMillis();
+
+
+    Geocoding gardet = geocoder.geocode("Gärdet, Stockholm, Sverige");
+    assertEquals(gardet, PolygonTools.findSmallestEnclosingBounds(gardet, stockholm));    
+
+    Geocoding osteraker = geocoder.geocode("Österåker, Stockholms län, Sverige");
+    assertEquals(null, PolygonTools.findSmallestEnclosingBounds(osteraker, stockholm));    
+
+
+    // test request filters
+    Geocoding mstou = geocoder.geocode("Main street, Toledo, Ohio, USA");
+    assertTrue(mstou.isSuccess());
+
+    Request request = new Request();
+    request.setTextQuery("Main street");
+    AddressComponentsRequestAugmenter acbf = new AddressComponentsRequestAugmenter();
+    acbf.getComponents().add(new AddressComponent("Toledo", null, AddressComponentType.locality, AddressComponentType.political));
+    acbf.getComponents().add(new AddressComponent("Ohio", null, AddressComponentType.political, AddressComponentType.administrative_area_level_1));
+    acbf.getComponents().add(new AddressComponent("USA", null, AddressComponentType.country));
+    request.setAugmenter(acbf);
+    Geocoding geocoding = geocoder.geocode(request);
+    assertTrue(geocoding.isSuccess());
+    assertEquals(mstou, geocoding);
+
+    new AddressComponentsScorer(geocoder.geocode("Toledo, Ohio, USA").getAddressComponents()).score(geocoding);
+
+    assertTrue(geocoding.isSuccess());
+    assertEquals(mstou, geocoding);
+
+    new ProximityScorer(geocoding).score(geocoding);
+    assertTrue(geocoding.isSuccess());
+    assertEquals(mstou, geocoding);
+
+    System.currentTimeMillis();
+
   }
 
   private void assertCentroidDistance(Geocoding from, Geocoding to, double minimumDistance, double maximumDistance) {

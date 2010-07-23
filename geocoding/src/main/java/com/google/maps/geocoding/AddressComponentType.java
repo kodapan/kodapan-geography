@@ -15,11 +15,14 @@
  */
 package com.google.maps.geocoding;
 
+import java.io.Serializable;
+
 /**
  * @author kalle
  * @since 2010-jun-23 20:19:18
  */
-public enum AddressComponentType {
+public enum AddressComponentType implements Serializable {
+
 
   /**
    * indicates a precise street address.
@@ -114,5 +117,7 @@ public enum AddressComponentType {
    * indicates the room of a building address.
    */
   room;
+
+  private static final long serialVersionUID = 1l;
 
 }

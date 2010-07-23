@@ -88,7 +88,7 @@ public class GoogleGeocoder {
   }
 
 
-  private synchronized void delay() {
+  private synchronized void delay(Request nextRequest) {
 
     long now = System.currentTimeMillis();
     if (queryOverLimitTimeStamp + 60000 > now) {
@@ -96,7 +96,7 @@ public class GoogleGeocoder {
     }
     if (now - millisecondsBetweenQueries < lastRequest) {
       try {
-        log.info("Sleeping for " + (lastRequest + millisecondsBetweenQueries - now) + " milliseconds.");
+        log.info("Sleeping for " + (lastRequest + millisecondsBetweenQueries - now) + " milliseconds. Next query: " + nextRequest);
         Thread.sleep(lastRequest + millisecondsBetweenQueries - now);
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
@@ -115,7 +115,9 @@ public class GoogleGeocoder {
       open();
     }
 
-    log.info("Geocoding \"" + request + "\"");
+    if (log.isDebugEnabled()) {
+      log.debug("Geocoding " + request + "");
+    }
 
     StringBuilder query = new StringBuilder();
     if (request.getAddress() != null) {
@@ -148,8 +150,8 @@ public class GoogleGeocoder {
       query.append(String.valueOf(request.getBounds().getSouthwest().getLng()));
     }
 
-    if (log.isInfoEnabled()) {
-      log.info("query=" + query.toString());
+    if (log.isDebugEnabled()) {
+      log.debug("query=" + query.toString());
     }
 
 
@@ -161,7 +163,7 @@ public class GoogleGeocoder {
 
       createdNewCache = true;
 
-      delay();
+      delay(request);
 
       try {
         BufferedReader br = new BufferedReader(new HttpGetReader(url));
@@ -212,10 +214,12 @@ public class GoogleGeocoder {
         throw new RuntimeException("OVER_QUERY_LIMIT");
       }
 
-      if (response.getResults() == null || response.getResults().size() == 0) {
-        log.info("Failed to geocode \"" + request + "\": " + response.getStatus());
-      } else {
-        log.info(response.getResults().size() + " hits from " + request + "");
+      if (log.isInfoEnabled()) {
+        if (response.getResults() == null || response.getResults().size() == 0) {
+          log.info("Failed to geocode \"" + request + "\": " + response.getStatus());
+        } else if (log.isDebugEnabled()) {
+          log.debug(response.getResults().size() + " hits from " + request + " " + response);
+        }
       }
 
       if (createdNewCache

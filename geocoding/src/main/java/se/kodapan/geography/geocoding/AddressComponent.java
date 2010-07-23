@@ -20,6 +20,7 @@ import se.kodapan.geography.core.AbstractPolygonDecorator;
 import se.kodapan.geography.core.Polygon;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,8 +34,22 @@ public class AddressComponent implements Serializable {
   
   private String longName;
   private String shortName;
-  private Set<AddressComponentType> types = new HashSet<AddressComponentType>();
+  private Set<AddressComponentType> types;
 
+  public AddressComponent() {
+    this (null, null, new HashSet<AddressComponentType>());
+  }
+
+  public AddressComponent(String longName, String shortName, AddressComponentType... types) {
+    this (longName, shortName, new HashSet<AddressComponentType>(Arrays.asList(types)));
+  }
+
+
+  public AddressComponent(String longName, String shortName, Set<AddressComponentType> types) {
+    this.longName = longName;
+    this.shortName = shortName;
+    this.types = types;
+  }
 
   @Override
   public String toString() {
@@ -43,6 +58,10 @@ public class AddressComponent implements Serializable {
         ", shortName='" + shortName + '\'' +
         ", types=" + types +
         '}';
+  }
+
+  public boolean hasShortName() {
+    return shortName == null || shortName.equals(longName);
   }
 
   public String getLongName() {
@@ -70,4 +89,25 @@ public class AddressComponent implements Serializable {
     this.types = types;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    AddressComponent component = (AddressComponent) o;
+
+    if (longName != null ? !longName.equals(component.longName) : component.longName != null) return false;
+    if (shortName != null ? !shortName.equals(component.shortName) : component.shortName != null) return false;
+    if (types != null ? !types.equals(component.types) : component.types != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = longName != null ? longName.hashCode() : 0;
+    result = 31 * result + (shortName != null ? shortName.hashCode() : 0);
+    result = 31 * result + (types != null ? types.hashCode() : 0);
+    return result;
+  }
 }

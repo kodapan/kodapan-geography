@@ -81,7 +81,11 @@ public enum AddressComponentType implements Serializable {
   transit_station,
   bus_station,
   postal_town,
-  establishment;
+  establishment,
+  point_of_interest,
+
+
+  unknown;
 
   private static final long serialVersionUID = 1l;
 
