@@ -5,7 +5,7 @@
 
   <groupId>se.kodapan.geography</groupId>
   <artifactId>geography-parent</artifactId>
-  <version>0.1</version>
+  <version>0.1-SNAPSHOT</version>
 
   <packaging>pom</packaging>
 
@@ -19,7 +19,7 @@
     <dependency>
       <groupId>se.kodapan.common</groupId>
       <artifactId>common</artifactId>
-      <version>0.1</version>
+      <version>0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>
