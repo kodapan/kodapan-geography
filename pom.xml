@@ -115,19 +115,19 @@
   <mailingLists>
     <mailingList>
       <name>Project mailing list</name>
-      <post>versionable@kodapan.se</post>
+      <post>geography@kodapan.se</post>
     </mailingList>
   </mailingLists>
 
   <scm>
-    <url>http://github.com/karlwettin/versionable</url>
-    <connection>scm:git:git://github.com/karlwettin/versionable</connection>
-    <developerConnection>scm:git:git@github.com:karlwettin/versionable.git</developerConnection>
+    <url>http://github.com/karlwettin/kodapan-geography</url>
+    <connection>scm:git:git://github.com/karlwettin/kodapan-geography</connection>
+    <developerConnection>scm:git:git@github.com:karlwettin/kodapan-geography.git</developerConnection>
   </scm>
 
   <issueManagement>
     <system>github</system>
-    <url>http://github.com/karlwettin/geography/issues</url>
+    <url>http://github.com/karlwettin/kodapan-geography/issues</url>
   </issueManagement>
 
 </project>

@@ -18,7 +18,9 @@ package se.kodapan.geography.geocoding;
 
 import junit.framework.TestCase;
 import org.junit.Test;
-import se.kodapan.geography.core.PolygonTools;
+import se.kodapan.geography.polygon.PolygonTools;
+import se.kodapan.geography.domain.AddressComponent;
+import se.kodapan.geography.domain.AddressComponentType;
 
 import java.io.File;
 
@@ -40,6 +42,21 @@ public class TestGeocoder extends TestCase {
 
   @Test
   public void test() throws Exception {
+
+
+    // todo its in tranås, but is not found!
+    Request request = new Request();
+    AddressComponentsRequestAugmenter augmenter = new AddressComponentsRequestAugmenter();
+    augmenter.getComponents().add(new AddressComponent("Jönköpings Län", AddressComponentType.administrative_area_level_1, AddressComponentType.political));
+    augmenter.getComponents().add(new AddressComponent("Sverige", AddressComponentType.country));
+    request.setAugmenter(augmenter);
+    request.setTextQuery("Prästgatan 10");
+    Geocoding tmp = geocoder.geocode(request);
+
+    // todo the first does not match.
+    // todo so keep track of all data ever received and search in the local data!
+    Geocoding blekinges = geocoder.geocode("Blekinges län, Sverige");
+    Geocoding blekinge = geocoder.geocode("Blekinge län, Sverige");
 
     double km;
 
@@ -91,7 +108,7 @@ public class TestGeocoder extends TestCase {
     Geocoding opgs = geocoder.geocode("Olof palmes gatan 23", stockholm);
     assertFalse(opgs.isSuccess());
     new ProximityScorer(stockholm).score(opgs);
-    new ScoreThreadsholdFilter().score(opgs);
+    new ThreadsholdScorer().score(opgs);
     assertTrue(stockholm.contains(opgs));
 
     Geocoding umeå = geocoder.geocode("Umeå, Sverige");
@@ -110,7 +127,7 @@ public class TestGeocoder extends TestCase {
 
     opg = geocoder.geocode("Olof palmes gatan 23");
     new ProximityScorer(stockholm).score(opg);
-    new ScoreThreadsholdFilter().score(opg);
+    new ThreadsholdScorer().score(opg);
 
     assertTrue(opg.isSuccess());
     assertTrue(stockholm.contains(opg));
@@ -140,12 +157,12 @@ public class TestGeocoder extends TestCase {
     Geocoding mstou = geocoder.geocode("Main street, Toledo, Ohio, USA");
     assertTrue(mstou.isSuccess());
 
-    Request request = new Request();
+    request = new Request();
     request.setTextQuery("Main street");
     AddressComponentsRequestAugmenter acbf = new AddressComponentsRequestAugmenter();
-    acbf.getComponents().add(new AddressComponent("Toledo", null, AddressComponentType.locality, AddressComponentType.political));
-    acbf.getComponents().add(new AddressComponent("Ohio", null, AddressComponentType.political, AddressComponentType.administrative_area_level_1));
-    acbf.getComponents().add(new AddressComponent("USA", null, AddressComponentType.country));
+    acbf.getComponents().add(new AddressComponent("Toledo", AddressComponentType.locality, AddressComponentType.political));
+    acbf.getComponents().add(new AddressComponent("Ohio", AddressComponentType.political, AddressComponentType.administrative_area_level_1));
+    acbf.getComponents().add(new AddressComponent("USA", AddressComponentType.country));
     request.setAugmenter(acbf);
     Geocoding geocoding = geocoder.geocode(request);
     assertTrue(geocoding.isSuccess());

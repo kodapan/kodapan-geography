@@ -25,6 +25,7 @@ import org.xml.sax.helpers.XMLFilterImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
 import se.kodapan.collections.MapSet;
 import se.kodapan.io.http.HttpGetReader;
+import se.kodapan.lang.Time;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -52,10 +53,12 @@ public class GoogleGeocoder {
   private static final String BASE_URL = "http://maps.google.com/maps/api/geocode/xml?";
 
 
-  private long millisecondsBetweenQueries = 1000;
+
+  private long millisecondsBetweenQueries = Time.second;
   private long lastRequest = System.currentTimeMillis();
 
   private long queryOverLimitTimeStamp = 0l;
+  private long queryOverLimitDelay = Time.hour;
 
   private File cachePath;
 
@@ -88,11 +91,11 @@ public class GoogleGeocoder {
   }
 
 
-  private synchronized void delay(Request nextRequest) {
+  private synchronized void delay(Request nextRequest) throws IOException {
 
     long now = System.currentTimeMillis();
-    if (queryOverLimitTimeStamp + 60000 > now) {
-      throw new RuntimeException("QUERY_OVER_LIMIT since " + new Date(queryOverLimitTimeStamp));
+    if (queryOverLimitTimeStamp + queryOverLimitDelay > now) {
+      throw new OverQueryLimitException("Since " + new Date(queryOverLimitTimeStamp));
     }
     if (now - millisecondsBetweenQueries < lastRequest) {
       try {
@@ -159,7 +162,9 @@ public class GoogleGeocoder {
 
     boolean createdNewCache = false;
     File cachedFile = new File(cachePath, query.toString());
-    if (!cachedFile.exists()) {
+    if (!cachedFile.exists()
+        || cachedFile.length() <= 10 // todo this is a hack! nothing but date posted.
+        ) {
 
       createdNewCache = true;
 
@@ -186,8 +191,14 @@ public class GoogleGeocoder {
 
     }
 
-    BufferedReader kml = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(cachedFile)), "UTF-8"));
-    kml.readLine(); // date created. todo allow for max age. in future perhaps try to keep fresh if there are resources left over.
+    BufferedReader kml;
+    try {
+      kml = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(cachedFile)), "UTF-8"));
+      kml.readLine(); // date created. todo allow for max age. in future perhaps try to keep fresh if there are resources left over.
+    } catch (IOException e) {
+      System.currentTimeMillis();
+      throw e;
+    }
 
     try {
 
@@ -211,7 +222,8 @@ public class GoogleGeocoder {
         if (!cachedFile.delete()) {
           log.error("Could node delete file " + cachedFile.getAbsolutePath());
         }
-        throw new RuntimeException("OVER_QUERY_LIMIT");
+        queryOverLimitTimeStamp = System.currentTimeMillis();
+        throw new OverQueryLimitException();
       }
 
       if (log.isInfoEnabled()) {

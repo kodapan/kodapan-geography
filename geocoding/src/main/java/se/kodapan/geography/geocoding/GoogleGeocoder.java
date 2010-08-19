@@ -19,8 +19,8 @@ import com.google.maps.geocoding.*;
 import com.google.maps.geocoding.AddressComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.kodapan.geography.core.*;
-import se.kodapan.geography.core.Envelope;
+import se.kodapan.geography.polygon.*;
+import se.kodapan.geography.polygon.Envelope;
 
 import java.io.IOException;
 
@@ -41,6 +41,11 @@ public class GoogleGeocoder extends Geocoder {
 
   public GoogleGeocoder(com.google.maps.geocoding.GoogleGeocoder geocoder) {
     this.geocoder = geocoder;
+  }
+
+  @Override
+  public int getMaximumResultsReturned() {
+    return 10;
   }
 
   public Geocoding geocode(Coordinate coordinate, String preferredLanguage) throws Exception {
@@ -82,7 +87,6 @@ public class GoogleGeocoder extends Geocoder {
   }
 
   private void sendRequest(Geocoding geocoding, com.google.maps.geocoding.Request googleRequest) throws IOException {
-    // send request
     GeocodeResponse googleResponse = geocoder.geocode(googleRequest);
     geocoding.setServerResponse(googleResponse);
 
@@ -111,7 +115,7 @@ public class GoogleGeocoder extends Geocoder {
 
       final ResultImpl result = new ResultImpl();
 
-      result.setFormattedAddress(googleResult.getFormattedAddress());
+      result.getAddressComponents().setFormattedAddress(googleResult.getFormattedAddress());
       result.setPrecision(Precision.valueOf(googleResult.getGeometry().getLocationType()));
 
       if (googleResult.getGeometry().getLocation() != null) {
@@ -122,7 +126,7 @@ public class GoogleGeocoder extends Geocoder {
         Envelope envelope = new CoordinatedEnvelope(){
           @Override
           public String getPolygonName() {
-            return result.getFormattedAddress();
+            return result.getAddressComponents().getFormattedAddress();
           }
         };
         envelope.addBounds(googleResult.getGeometry().getBounds().getNortheast().getLat(), googleResult.getGeometry().getBounds().getNortheast().getLng());
@@ -132,7 +136,7 @@ public class GoogleGeocoder extends Geocoder {
         result.setBounds(new AbstractSingleCoordinatePolygon(result.getLocation()){
           @Override
           public String getPolygonName() {
-            return result.getFormattedAddress();
+            return result.getAddressComponents().getFormattedAddress();
           }
         });
       }
@@ -172,15 +176,15 @@ public class GoogleGeocoder extends Geocoder {
 
 
       for (AddressComponent googleComponent : googleResult.getAddressComponents()) {
-        se.kodapan.geography.geocoding.AddressComponent addressComponent = new se.kodapan.geography.geocoding.AddressComponent();
+        se.kodapan.geography.domain.AddressComponent addressComponent = new se.kodapan.geography.domain.AddressComponent();
         addressComponent.setLongName(googleComponent.getLongName());
         addressComponent.setShortName(googleComponent.getShortName());
         for (String type : googleComponent.getTypes()) {
-          AddressComponentType enumType = null;
+          se.kodapan.geography.domain.AddressComponentType enumType = null;
           try {
-            enumType = AddressComponentType.valueOf(type);
+            enumType = se.kodapan.geography.domain.AddressComponentType.valueOf(type);
           } catch (Exception e) {
-            enumType = AddressComponentType.unknown;
+            enumType = se.kodapan.geography.domain.AddressComponentType.unknown;
           }
           addressComponent.getTypes().add(enumType);
         }

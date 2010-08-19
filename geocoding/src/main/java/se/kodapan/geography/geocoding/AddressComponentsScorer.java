@@ -1,6 +1,9 @@
 package se.kodapan.geography.geocoding;
 
 
+import se.kodapan.geography.domain.AddressComponent;
+import se.kodapan.geography.domain.AddressComponents;
+
 import java.util.Collections;
 
 /**
@@ -43,12 +46,13 @@ public class AddressComponentsScorer extends ResultsScorer {
   }
 
   private double score(Result result) {
-    int score = 0;
+    double score = 1d;
     for (AddressComponent component : components) {
       if (result.getAddressComponents().contains(component)) {
         score++;
       }
     }
+    score = result.getScore() * score;
     return score;
   }
 

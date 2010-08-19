@@ -15,15 +15,13 @@
  */
 package se.kodapan.geography.geocoding;
 
-import se.kodapan.collections.MapSet;
-import se.kodapan.geography.core.*;
+import se.kodapan.geography.domain.AddressComponents;
+import se.kodapan.geography.polygon.Coordinate;
+import se.kodapan.geography.polygon.CoordinateImpl;
+import se.kodapan.geography.polygon.Envelope;
+import se.kodapan.geography.polygon.EnvelopeImpl;
 
-import java.awt.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
 /**
  * @author kalle
@@ -38,7 +36,9 @@ public class ResultImpl extends AbstractResult implements Serializable {
 
   @Override
   public <T> T accept(ResultVisitor<T> visitor) {
-
+    if (getPrecision() == null) {
+      return visitor.visit(getBounds());
+    }
     switch (getPrecision()) {
       case ROOFTOP:
         return visitor.visit(getLocation());
@@ -51,7 +51,6 @@ public class ResultImpl extends AbstractResult implements Serializable {
   }
 
   private AddressComponents addressComponents = new AddressComponents();
-  private String formattedAddress;
 
   private Envelope bounds;
   private Envelope viewPort;
@@ -63,100 +62,20 @@ public class ResultImpl extends AbstractResult implements Serializable {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || !Result.class.isAssignableFrom(o.getClass())) return false;
-    if (!super.equals(o)) return false;
 
     Result result = (Result) o;
 
-    if (formattedAddress != null ? !formattedAddress.equalsIgnoreCase(result.getFormattedAddress()) : result.getFormattedAddress() != null)
-      return false;
-
-    return true;
+    String formattedAddress = addressComponents != null ? addressComponents.getFormattedAddress() : null;
+    String formattedAddress2 = result.getAddressComponents() != null ? result.getAddressComponents().getFormattedAddress() : null;
+    return !(formattedAddress != null ? !formattedAddress.equalsIgnoreCase(formattedAddress2) : formattedAddress2 != null);
   }
 
   @Override
   public int hashCode() {
     int result = super.hashCode();
-    result = 31 * result + (formattedAddress != null ? formattedAddress.hashCode() : 0);
+    result = 31 * result + (addressComponents != null ? addressComponents.getFormattedAddress() != null ? addressComponents.getFormattedAddress().hashCode() : 0 : 0);
     return result;
   }
-
-  @Override
-  public void setFormattedAddress(Locale locale) {
-    StringBuilder sb = new StringBuilder();
-
-    AddressComponent route = addressComponents.get(AddressComponentType.route);
-
-    AddressComponent streetNumber = addressComponents.get(AddressComponentType.street_number);
-    if (streetNumber != null) {
-      if (locale.getLanguage().equals("en")) {
-
-        sb.append(streetNumber.getLongName());
-        sb.append(" ");
-        sb.append(route.getLongName());
-        sb.append(", ");
-
-
-      } else {
-
-        sb.append(route.getLongName());
-        sb.append(" ");
-        sb.append(streetNumber.getLongName());
-        sb.append(", ");
-
-      }
-
-    } else {
-
-      if (route != null) {
-        sb.append(route.getLongName());
-
-      } else {
-        AddressComponent streetAddress = addressComponents.get(AddressComponentType.street_address);
-        if (streetAddress != null) {
-          sb.append(streetAddress.getLongName());
-          sb.append(", ");
-        }
-
-      }
-
-    }
-
-
-    AddressComponent subLocality = addressComponents.get(AddressComponentType.sublocality, AddressComponentType.political);
-    if (subLocality != null) {
-      sb.append(subLocality.getLongName());
-      sb.append(", ");
-
-    }
-
-    // todo find the most inner postal code, but only where there is one most inner postal code in the result. there might be several for a city, etc.
-    List<AddressComponent> postalCodes = getAddressComponents().list(AddressComponentType.postal_code);
-    if (postalCodes != null && postalCodes.size() == 1) {
-      AddressComponent postalCode = postalCodes.iterator().next();
-      sb.append(postalCode.getLongName());
-      sb.append(", ");
-    }
-    
-    AddressComponent city = addressComponents.get(AddressComponentType.locality, AddressComponentType.political);
-    if (city != null) {
-      sb.append(city.getLongName());
-      sb.append(", ");
-    }
-
-
-
-    AddressComponent country = addressComponents.get(AddressComponentType.country);
-    if (country != null) {
-      sb.append(country.getLongName());
-      sb.append(", ");
-    }
-
-    sb.delete(sb.length() - 2, sb.length());
-
-    setFormattedAddress(sb.toString());
-
-  }
-
 
   @Override
   public Envelope getBounds() {
@@ -165,10 +84,14 @@ public class ResultImpl extends AbstractResult implements Serializable {
 
   @Override
   public void setBounds(Envelope bounds) {
-    EnvelopeImpl envelope = new EnvelopeImpl(getFormattedAddress());
-    envelope.setNorthEast(new CoordinateImpl(bounds.getNorthEast()));
-    envelope.setSouthWest(new CoordinateImpl(bounds.getSouthWest()));
-    this.bounds = envelope;
+    if (bounds == null) {
+      this.bounds = null;
+    } else {
+      EnvelopeImpl envelope = new EnvelopeImpl(addressComponents.getFormattedAddress());
+      envelope.setNorthEast(new CoordinateImpl(bounds.getNorthEast()));
+      envelope.setSouthWest(new CoordinateImpl(bounds.getSouthWest()));
+      this.bounds = envelope;
+    }
   }
 
   @Override
@@ -178,10 +101,14 @@ public class ResultImpl extends AbstractResult implements Serializable {
 
   @Override
   public void setViewPort(Envelope viewPort) {
-    EnvelopeImpl envelope = new EnvelopeImpl(getFormattedAddress());
-    envelope.setNorthEast(new CoordinateImpl(viewPort.getNorthEast()));
-    envelope.setSouthWest(new CoordinateImpl(viewPort.getSouthWest()));
-    this.viewPort = envelope;
+    if (viewPort == null) {
+      this.viewPort = null;
+    } else {
+      EnvelopeImpl envelope = new EnvelopeImpl(addressComponents.getFormattedAddress());
+      envelope.setNorthEast(new CoordinateImpl(viewPort.getNorthEast()));
+      envelope.setSouthWest(new CoordinateImpl(viewPort.getSouthWest()));
+      this.viewPort = envelope;
+    }
   }
 
   @Override
@@ -191,7 +118,11 @@ public class ResultImpl extends AbstractResult implements Serializable {
 
   @Override
   public void setLocation(Coordinate location) {
-    this.location = new CoordinateImpl(location);
+    if (location == null) {
+      this.location = null;
+    } else {
+      this.location = new CoordinateImpl(location);
+    }
   }
 
 
@@ -216,16 +147,6 @@ public class ResultImpl extends AbstractResult implements Serializable {
   }
 
   @Override
-  public String getFormattedAddress() {
-    return formattedAddress;
-  }
-
-  @Override
-  public void setFormattedAddress(String formattedAddress) {
-    this.formattedAddress = formattedAddress;
-  }
-
-  @Override
   public AddressComponents getAddressComponents() {
     return addressComponents;
   }
@@ -240,12 +161,11 @@ public class ResultImpl extends AbstractResult implements Serializable {
   public String toString() {
     return "ResultImpl{" +
         "score=" + score +
-        ", formattedAddress='" + formattedAddress + '\'' +
+        ", addressComponents=" + addressComponents +
         ", precision=" + precision +
         ", location=" + location +
         ", bounds=" + bounds +
         ", viewPort=" + viewPort +
-        ", addressComponents=" + addressComponents +
         '}';
   }
 }

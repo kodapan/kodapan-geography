@@ -23,22 +23,5 @@ public abstract class AbstractResult implements Result {
 
   private static final long serialVersionUID = 1l;  
 
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || !Result.class.isAssignableFrom(o.getClass())) return false;
-
-    Result result = (Result) o;
-
-    return !(getFormattedAddress() != null ? !getFormattedAddress().equals(result.getFormattedAddress()) : result.getFormattedAddress() != null);
-
-  }
-
-  @Override
-  public int hashCode() {
-    return getFormattedAddress() != null ? getFormattedAddress().hashCode() : 0;
-  }
-
   
 }

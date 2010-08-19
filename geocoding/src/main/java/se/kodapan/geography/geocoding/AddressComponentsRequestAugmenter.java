@@ -1,125 +1,108 @@
 package se.kodapan.geography.geocoding;
 
 
-import se.kodapan.io.SerializableTool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import se.kodapan.geography.domain.AddressComponent;
+import se.kodapan.geography.domain.AddressComponentType;
+import se.kodapan.geography.domain.AddressComponents;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
- * If missing in text query this filter adds
- * country
- * administrative area 1 (USA: state, Sweden: län)
- * and locality (city) or postal town
- * in that order or breaks if it yield a successful response.
- *
- *
+ * If missing in text query this filter adds registered components as comma separated suffix.
+ * eg:
+ * <p/>
+ * storgatan ->
+ * <p/>
+ * storgatan, sweden
+ * storgatan, jönköpings län, sweden
+ * storgatan, tranås, jönsköpings län, sweden
+ * <p/>
+ * Increases score the more narrow the query gets.
  *
  * @author kalle
  * @since 2010-jul-21 18:02:51
  */
 public class AddressComponentsRequestAugmenter implements RequestAugmenter {
 
-  private AddressComponents components;
+  private static final Logger log = LoggerFactory.getLogger(AddressComponentsRequestAugmenter.class);
+
+  private AddressComponents components = new AddressComponents();
 
   public AddressComponentsRequestAugmenter() {
-    this.components = new AddressComponents();
   }
 
   public AddressComponentsRequestAugmenter(AddressComponents components) {
-    this.components = components;
+    this.components.addAll(components);
   }
 
   @Override
-  public Geocoding filter(Geocoder geocoder, Request request, Geocoding input) throws Exception {
+  public Geocoding filter(Geocoder geocoder, Request request) throws Exception {
 
-    if (input.isSuccess() || input.getResults().size() < 2) {
-      return input;
-    }
-
-    // a geocoding containing all the results found
-    Geocoding response = SerializableTool.clone(input);
-
-
-    Geocoding geocoding = input;
 
     LinkedList<AddressComponent> components = new LinkedList<AddressComponent>();
 
     AddressComponent country = this.components.get(AddressComponentType.country);
     if (country != null) {
-      components.addFirst(country);
-
-      geocoding = filter(geocoder, request, components);
-      response.mergeResults(geocoding);
-      for (Result result : geocoding.getResults()) {
-        result.setScore(result.getScore() + 1d);
-      }
-
+      components.addLast(country);
     }
 
-    if (!geocoding.isSuccess() && geocoding.getResults().size() > 1) {
-
-      AddressComponent administrativeArea1 = this.components.get(AddressComponentType.political, AddressComponentType.administrative_area_level_1);
-      if (administrativeArea1 != null) {
-        components.addFirst(administrativeArea1);
-
-        geocoding = filter(geocoder, request, components);
-        response.mergeResults(geocoding);
-        for (Result result : geocoding.getResults()) {
-          result.setScore(result.getScore() + 1d);
-        }
-
-      }
-
-      if (!geocoding.isSuccess() && geocoding.getResults().size() > 1) {
-
-        AddressComponent locality = this.components.get(AddressComponentType.political, AddressComponentType.locality);
-        if (locality != null) {
-          components.addFirst(locality);
-          geocoding = filter(geocoder, request, components);
-          response.mergeResults(geocoding);
-          for (Result result : geocoding.getResults()) {
-            result.setScore(result.getScore() + 1d);
-          }
-
-        } else {
-          AddressComponent postalTown = this.components.get(AddressComponentType.political, AddressComponentType.postal_town);
-          if (postalTown != null) {
-            components.addFirst(postalTown);
-            geocoding = filter(geocoder, request, components);
-            response.mergeResults(geocoding);
-            for (Result result : geocoding.getResults()) {
-              result.setScore(result.getScore() + 1d);
-            }
-
-          }
-        }
-      }
+    AddressComponent administrativeArea1 = this.components.get(AddressComponentType.political, AddressComponentType.administrative_area_level_1);
+    if (administrativeArea1 != null) {
+      components.addLast(administrativeArea1);
     }
 
-    if (geocoding.isSuccess()) {
+    for (AddressComponent district : this.components.list(AddressComponentType.political, AddressComponentType.locality)) {
+      components.addLast(district);
+    }
 
-      int index = response.getResults().indexOf(geocoding.getDecoratedResult());
-      Result successfulResult;
-      if (index == -1) {
-        throw new RuntimeException();
-      } else {
-        successfulResult = response.getResults().remove(index);
-      }
-
-      // add to top in results
-      response.getResults().add(0, successfulResult);
-      response.setSuccess(true);
-
+    AddressComponent postalTown = this.components.get(AddressComponentType.political, AddressComponentType.postal_town);
+    if (postalTown != null) {
+      components.addLast(postalTown);
     } else {
-
-      Collections.sort(response.getResults(), Result.scoreComparator);
-      new ScoreThreadsholdFilter().score(response);
-
+      AddressComponent city = this.components.get(AddressComponentType.political, AddressComponentType.locality);
+      if (city != null) {
+        components.addLast(city);
+      }
     }
 
-    return response;
+    // sweden
+    // jönköpings län, sweden
+    // tranås, jönsköpings län, sweden
+    Geocoding merged = new Geocoding();
+    Map<Result, Integer> levelAdded = new HashMap<Result, Integer>();
+
+    LinkedList<AddressComponent> componentsUsed = new LinkedList<AddressComponent>();
+    for (int i = 0, max = components.size(); i <= max; i++) {
+      componentsUsed.clear();
+      for (int i2 = 0; i2 < i; i2++) {
+        componentsUsed.addFirst(components.get(i2));
+      }
+      Geocoding geocoding = filter(geocoder, request, componentsUsed);
+      if (geocoding.getResults().size() == 0) {
+        // if we dont find anything for the text query we should not look any deeper!
+        break;
+      }
+
+      for (Result result : geocoding.getResults()) {
+        result = merged.mergeResult(result);
+        levelAdded.put(result, i);
+      }
+
+      if (geocoding.isSuccess()) {
+        break;
+      }
+    }
+    for (Result result : merged.getResults()) {
+      double factor = 1d + levelAdded.get(result);
+      factor *= factor;
+      result.setScore(result.getScore() * factor);
+    }
+    Collections.sort(merged.getResults(), Result.scoreComparator);
+    merged = new MergeSameHouseResultsFilter(merged).filter();
+    new ThreadsholdScorer().score(merged);
+    return merged;
 
   }
 
@@ -128,8 +111,8 @@ public class AddressComponentsRequestAugmenter implements RequestAugmenter {
     sb.append(request.getTextQuery());
     String text = request.getTextQuery().toLowerCase();
     for (AddressComponent component : components) {
-      if (!(text.matches("(^|.*\\W)" + component.getLongName() + "($|\\W.*)")
-          || (component.hasShortName() && text.matches("(^|.*\\W)" + component.getShortName() + "($|\\W.*)")))) {
+      if (!(text.matches("(^|.*\\W)" + component.getLongName().toLowerCase() + "($|\\W.*)")
+          || (component.hasShortName() && text.matches("(^|.*\\W)" + component.getShortName().toLowerCase() + "($|\\W.*)")))) {
         sb.append(", ").append(component.getLongName());
       } else {
         System.currentTimeMillis();
@@ -139,7 +122,33 @@ public class AddressComponentsRequestAugmenter implements RequestAugmenter {
     tmp.setBounds(request.getBounds());
     tmp.setLanguage(request.getLanguage());
     tmp.setTextQuery(sb.toString());
-    return geocoder.geocode(tmp);
+    Geocoding geocoding = geocoder.geocode(tmp);
+
+    // ensure the results contain the request text
+    // this avoids picking up items that are just the bias area
+    String[] parts = request.getTextQuery().toLowerCase().split("\\s+");
+    for (Iterator<Result> it = geocoding.getResults().iterator(); it.hasNext();) {
+      Result result = it.next();
+      boolean found = false;
+      for (String part : parts) {
+        for (AddressComponent component : result.getAddressComponents()) {
+          if (component.getLongName().toLowerCase().contains(part)
+              || component.getShortName().toLowerCase().contains(part)) {
+            found = true;
+          }
+        }
+      }
+      if (!found) {
+        it.remove();
+        if (log.isDebugEnabled()) {
+          log.debug("Removing " + result + " as no component match any token of " + request.getTextQuery());
+        }
+      }
+    }
+    if (geocoding.getResults().size() == 0) {
+      geocoding.setSuccess(false);
+    }
+    return geocoding;
   }
 
   public final AddressComponents getComponents() {

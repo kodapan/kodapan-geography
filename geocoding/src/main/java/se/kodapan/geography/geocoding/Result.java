@@ -15,9 +15,9 @@
  */
 package se.kodapan.geography.geocoding;
 
-import se.kodapan.collections.MapSet;
-import se.kodapan.geography.core.Coordinate;
-import se.kodapan.geography.core.Envelope;
+import se.kodapan.geography.polygon.Coordinate;
+import se.kodapan.geography.polygon.Envelope;
+import se.kodapan.geography.domain.AddressComponents;
 
 import java.io.Serializable;
 import java.util.*;
@@ -43,8 +43,6 @@ public interface Result extends Serializable {
   };
 
 
-  public abstract void setFormattedAddress(Locale locale);
-
   
   public abstract <T> T accept(ResultVisitor<T> visitor);
 
@@ -67,10 +65,6 @@ public interface Result extends Serializable {
   public abstract double getScore();
 
   public abstract void setScore(double score);
-
-  public abstract String getFormattedAddress();
-
-  public abstract void setFormattedAddress(String formattedAddress);
 
   public abstract AddressComponents getAddressComponents();
 

@@ -15,10 +15,15 @@
  */
 package se.kodapan.geography.geocoding;
 
-import se.kodapan.geography.core.*;
+import se.kodapan.geography.domain.AddressComponent;
+import se.kodapan.geography.domain.AddressComponents;
+import se.kodapan.geography.polygon.*;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 /**
  * decorates the successful result.
@@ -38,6 +43,15 @@ public class Geocoding extends AbstractPolygonDecorator implements Result, Coord
   private Object serverResponse;
 
   private List<Result> results = new ArrayList<Result>();
+
+  public double kmDiagonal() {
+    Envelope envelope = new EnvelopeImpl();
+    for (Result result : results) {
+      envelope.addBounds(result.getLocation());
+    }
+    return envelope.getSouthWest().archDistance(envelope.getNorthEast());
+
+  }
 
   public void mergeResults(Geocoding geocoding) {
     for (Result result : geocoding.getResults()) {
@@ -69,7 +83,7 @@ public class Geocoding extends AbstractPolygonDecorator implements Result, Coord
         if (allHas.contains(component) || allHasNot.contains(component)) {
           continue;
         }
-        boolean allHasThis  =true;
+        boolean allHasThis = true;
         for (Result result2 : getResults()) {
           if (result == result2) {
             continue;
@@ -92,17 +106,21 @@ public class Geocoding extends AbstractPolygonDecorator implements Result, Coord
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (o == null) return false;
 
-    Geocoding geocoding = (Geocoding) o;
+    if (getClass() == o.getClass()) {
+      Geocoding geocoding = (Geocoding) o;
+      if (!success && !geocoding.success) return true;
+      if (success != geocoding.success) return false;
 
-    if (success != geocoding.success) return false;
-    if (getFormattedAddress() != null ? !getFormattedAddress().equals(geocoding.getFormattedAddress()) : geocoding.getFormattedAddress() != null)
-      return false;
-    if (getLocation() != null ? !getLocation().equals(geocoding.getLocation()) : geocoding.getLocation() != null)
-      return false;
+      return geocoding.getDecoratedResult().equals(getDecoratedResult());
+    } else if (Result.class.isAssignableFrom(o.getClass())){
+      if (isSuccess()) {
+        return o.equals(this);
+      }
+    }
 
-    return true;
+    return false;
   }
 
   @Override
@@ -147,7 +165,7 @@ public class Geocoding extends AbstractPolygonDecorator implements Result, Coord
         return new AbstractSingleCoordinatePolygon(location) {
           @Override
           public String getPolygonName() {
-            return getDecoratedResult().getFormattedAddress();
+            return getDecoratedResult().getAddressComponents().getFormattedAddress();
           }
         };
       }
@@ -162,7 +180,7 @@ public class Geocoding extends AbstractPolygonDecorator implements Result, Coord
   @Override
   public String getPolygonName() {
     if (isSuccess()) {
-      return results.get(0).getFormattedAddress();
+      return results.get(0).getAddressComponents().getFormattedAddress();
     } else {
       return "Unsuccessful unique geocoding";
     }
@@ -275,20 +293,6 @@ public class Geocoding extends AbstractPolygonDecorator implements Result, Coord
     getDecoratedResult().setScore(score);
   }
 
-  @Override
-  public String getFormattedAddress() {
-    return getDecoratedResult().getFormattedAddress();
-  }
-
-  @Override
-  public void setFormattedAddress(String formattedAddress) {
-    getDecoratedResult().setFormattedAddress(formattedAddress);
-  }
-
-  @Override
-  public void setFormattedAddress(Locale locale) {
-    throw new UnsupportedOperationException();
-  }
 }
 
 

@@ -35,7 +35,10 @@ public enum Precision implements Serializable {
   GEOMETRIC_CENTER,
 
   /** indicates that the returned result is approximate. */
-  APPROXIMATE;
+  APPROXIMATE,
+
+  /** indicates that we have no clue what so ever to where in the bounds the location really is */
+  WAY_OFF;
 
   private static final long serialVersionUID = 1l;
   

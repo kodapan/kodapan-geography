@@ -50,8 +50,7 @@ import java.util.List;
 
 public class GeocodeResponse implements Serializable {
 
-  private static final long serialVersionUID = 1l;
-
+  private static final long serialVersionUID = 1l;  
 
   @XmlElement(name = "status", required = true)
   protected String status;

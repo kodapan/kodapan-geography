@@ -17,8 +17,8 @@ package se.kodapan.geography.geocoding;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.kodapan.geography.core.Coordinate;
-import se.kodapan.geography.core.Polygon;
+import se.kodapan.geography.polygon.Coordinate;
+import se.kodapan.geography.polygon.Polygon;
 
 /**
  * @author kalle
@@ -29,8 +29,13 @@ public abstract class Geocoder {
   protected static final Logger log = LoggerFactory.getLogger(Geocoder.class);
 
   /**
+   * @return the number of results possible to get using this geocoder.
+   */
+  public abstract int getMaximumResultsReturned();
+
+  /**
    * reverse geocoding
-   * 
+   *
    * @param coordinate
    * @return
    * @throws Exception
@@ -51,15 +56,16 @@ public abstract class Geocoder {
   }
 
   public final Geocoding geocode(Request request) throws Exception {
-    Geocoding geocoding = doGeocode(request);
-    // todo add debug level (test scope) checking that this geocoding has not been touched by the filter!
+    /*
+     * Could just be a decorated/filtered geocoder in many cases,
+     * but this allows for passing different augmenters in the request.
+     */
     if (request.getAugmenter() != null) {
-      Geocoding response = request.getAugmenter().filter(this, request, geocoding);
-      if (response != null) {
-        geocoding = response;
-      }
+      return request.getAugmenter().filter(this, request);
+    } else {
+      return doGeocode(request);
     }
-    return geocoding;
+
   }
 
   /**
