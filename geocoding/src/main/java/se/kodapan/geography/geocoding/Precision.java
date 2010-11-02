@@ -15,7 +15,7 @@
  */
 package se.kodapan.geography.geocoding;
 
-import java.io.Serializable;
+import java.io.*;
 
 /**
  * @author kalle
@@ -40,10 +40,26 @@ public enum Precision implements Serializable {
   /** indicates that we have no clue what so ever to where in the bounds the location really is */
   WAY_OFF;
 
+  public int integerValue() {
+    switch (this) {
+      case ROOFTOP: return 0;
+      case RANGE_INTERPOLATED: return 1;
+      case GEOMETRIC_CENTER: return 2;
+      case APPROXIMATE: return 3;
+      case WAY_OFF: return 4;
+      default: return Integer.MAX_VALUE;
+    }
+  }
+
+  public boolean morePreciseThan(Precision precision) {
+    return precision.integerValue() > integerValue();
+  }
+
+  public boolean morePreciseThanOrEqualTo(Precision precision) {
+    return precision.integerValue() >= integerValue();
+  }
+
+
   private static final long serialVersionUID = 1l;
   
-
-
-
-
 }
