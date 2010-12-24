@@ -71,11 +71,12 @@ public abstract class AbstractEnvelope
     }
   }
 
-  
+
   @Override
   public Iterator<Coordinate> iterateCoordinates() {
-    return new Iterator<Coordinate>(){
+    return new Iterator<Coordinate>() {
       int state = 0;
+
       @Override
       public boolean hasNext() {
         return state < 4;
@@ -85,11 +86,20 @@ public abstract class AbstractEnvelope
       public Coordinate next() {
         Coordinate coordinate;
         switch (state) {
-          case 0 : coordinate = getNorthEast(); break;
-          case 1 : coordinate = getNorthWest(); break;
-          case 2 : coordinate = getSouthWest(); break;
-          case 3 : coordinate = getSouthEast(); break;
-          default : throw new NoSuchElementException();
+          case 0:
+            coordinate = getNorthEast();
+            break;
+          case 1:
+            coordinate = getNorthWest();
+            break;
+          case 2:
+            coordinate = getSouthWest();
+            break;
+          case 3:
+            coordinate = getSouthEast();
+            break;
+          default:
+            throw new NoSuchElementException();
         }
         state++;
         return coordinate;
@@ -104,13 +114,35 @@ public abstract class AbstractEnvelope
 
   @Override
   public boolean contains(Coordinate coordinate) {
-    return coordinate.getLatitude() <= getNorthEast().getLatitude()
-        && coordinate.getLongitude() >= getNorthEast().getLongitude()
-        && coordinate.getLatitude() >= getSouthWest().getLatitude()
-        && coordinate.getLongitude() <= getSouthWest().getLongitude();
+
+    if (getNorthEast().getLongitude() > getSouthWest().getLongitude()) {
+
+      // spans international date line
+      // todo these should be transient
+
+      EnvelopeImpl asianSide = new EnvelopeImpl();
+      asianSide.setNorthEast(new CoordinateImpl(getNorthEast().getLatitude(), 180));
+      asianSide.setSouthWest(new CoordinateImpl(getSouthWest().getLatitude(), getSouthWest().getLongitude()));
+
+      EnvelopeImpl americanSide = new EnvelopeImpl();
+      asianSide.setNorthEast(new CoordinateImpl(getNorthEast().getLatitude(), getNorthEast().getLongitude()));
+      asianSide.setSouthWest(new CoordinateImpl(getSouthWest().getLatitude(), -180));
+
+      return asianSide.contains(coordinate) || americanSide.contains(coordinate);
+
+    } else {
+
+      return coordinate.getLatitude() <= getNorthEast().getLatitude()
+          && coordinate.getLongitude() >= getNorthEast().getLongitude()
+          && coordinate.getLatitude() >= getSouthWest().getLatitude()
+          && coordinate.getLongitude() <= getSouthWest().getLongitude();
+    }
   }
 
   private final AbstractCoordinate centroid = new AbstractCoordinate() {
+
+    private static final long serialVersionUID = 1l;
+
     @Override
     public double getLatitude() {
       return (getSouthWest().getLatitude() + getNorthEast().getLatitude()) / 2d;
@@ -124,18 +156,21 @@ public abstract class AbstractEnvelope
 
     @Override
     public void setLatitude(double latitude) {
-      throw new RuntimeException();
+      throw new UnsupportedOperationException();
     }
 
     @Override
     public void setLongitude(double longitude) {
-      throw new RuntimeException();
+      throw new UnsupportedOperationException();
     }
 
   };
 
 
   private final AbstractCoordinate southEast = new AbstractCoordinate() {
+
+    private static final long serialVersionUID = 1l;
+
     @Override
     public double getLatitude() {
       return getSouthWest().getLatitude();
@@ -161,6 +196,9 @@ public abstract class AbstractEnvelope
 
 
   private final AbstractCoordinate northWest = new AbstractCoordinate() {
+
+    private static final long serialVersionUID = 1l;
+
     @Override
     public double getLatitude() {
       return getNorthEast().getLatitude();
@@ -184,7 +222,7 @@ public abstract class AbstractEnvelope
 
   };
 
-    @Override
+  @Override
   public Coordinate getSouthEast() {
     return southEast;
   }
