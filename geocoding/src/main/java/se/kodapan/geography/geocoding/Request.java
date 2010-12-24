@@ -15,9 +15,11 @@
  */
 package se.kodapan.geography.geocoding;
 
+import se.kodapan.geography.domain.AddressComponentType;
 import se.kodapan.geography.polygon.Polygon;
 
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * @author kalle
@@ -49,7 +51,7 @@ public class Request implements Serializable {
    * Geocoding time augmentations
    */
   private RequestAugmenter augmenter;
-
+  
   public Request() {
     this(null, null, null);
   }
