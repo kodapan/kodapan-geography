@@ -25,7 +25,7 @@ public class AddressComponentTypeFilter extends ResponseFilter {
   }
 
   @Override
-  public Geocoding filter() throws Exception {
+  public Geocoding filter() {
     for (Result result : geocoding.getResults()) {
       for (Iterator<AddressComponent> it = result.getAddressComponents().iterator(); it.hasNext();) {
         AddressComponent component = it.next();

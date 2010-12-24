@@ -100,18 +100,10 @@ public class GoogleGeocoder extends Geocoder {
       parseResponse(geocoding, googleResponse);
     }
 
-    // reverse geocoding return multiple responses. merge these to a single response.
+    // reverse geocoding return multiple responses. the first one is the most precise
     if (googleRequest.getLatLng() != null
         && geocoding.getResults() != null
         && !geocoding.getResults().isEmpty()) {
-      Result endProduct = new ResultImpl();
-      for (Result result : geocoding.getResults()) {
-        for (se.kodapan.geography.domain.AddressComponent component : result.getAddressComponents()) {
-          endProduct.getAddressComponents().add(component);
-        }
-        endProduct.setScore(endProduct.getScore() + result.getScore());
-      }
-      geocoding.getResults().add(0, endProduct);
       geocoding.setSuccess(true);
     }
 
