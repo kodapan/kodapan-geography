@@ -18,6 +18,7 @@ package se.kodapan.geography.geocoding;
 
 import junit.framework.TestCase;
 import org.junit.Test;
+import se.kodapan.geography.polygon.CoordinateImpl;
 import se.kodapan.geography.polygon.PolygonTools;
 import se.kodapan.geography.domain.AddressComponent;
 import se.kodapan.geography.domain.AddressComponentType;
@@ -38,6 +39,12 @@ public class TestGeocoder extends TestCase {
     googleGeocoder.setCachePath(new File("target/cache/google/geocoder"));
     googleGeocoder.open();
     geocoder = new GoogleGeocoder(googleGeocoder);
+  }
+
+  @Test
+  public void testReverseGeocoding() throws Exception {
+    Geocoding geocoding = geocoder.geocode(new CoordinateImpl(59.3350469d, 18.0569641d));
+    assertTrue(geocoding.isSuccess());
   }
 
   @Test
@@ -107,8 +114,10 @@ public class TestGeocoder extends TestCase {
 
     Geocoding opgs = geocoder.geocode("Olof palmes gatan 23", stockholm);
     assertFalse(opgs.isSuccess());
+    opgs = new MergeSameHouseResultsFilter(opgs).filter();    
     new ProximityScorer(stockholm).score(opgs);
     new ThreadsholdScorer().score(opgs);
+    assertTrue(opgs.isSuccess());
     assertTrue(stockholm.contains(opgs));
 
     Geocoding umeå = geocoder.geocode("Umeå, Sverige");
@@ -126,9 +135,9 @@ public class TestGeocoder extends TestCase {
 
 
     opg = geocoder.geocode("Olof palmes gatan 23");
+    opg = new MergeSameHouseResultsFilter(opg).filter();        
     new ProximityScorer(stockholm).score(opg);
     new ThreadsholdScorer().score(opg);
-
     assertTrue(opg.isSuccess());
     assertTrue(stockholm.contains(opg));
 
@@ -146,8 +155,8 @@ public class TestGeocoder extends TestCase {
     System.currentTimeMillis();
 
 
-    Geocoding gardet = geocoder.geocode("Gärdet, Stockholm, Sverige");
-    assertEquals(gardet, PolygonTools.findSmallestEnclosingBounds(gardet, stockholm));    
+//    Geocoding gardet = geocoder.geocode("Gärdet, Stockholm, Sverige");
+//    assertEquals(gardet, PolygonTools.findSmallestEnclosingBounds(gardet, stockholm));
 
     Geocoding osteraker = geocoder.geocode("Österåker, Stockholms län, Sverige");
     assertEquals(null, PolygonTools.findSmallestEnclosingBounds(osteraker, stockholm));    
