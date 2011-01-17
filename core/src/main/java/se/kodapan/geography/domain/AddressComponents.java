@@ -226,11 +226,8 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
         sb.append(", ");
 
 
-      } else {
+      } else if (route != null) {
 
-        if (route == null) {
-          System.currentTimeMillis();
-        }
         sb.append(route.getLongName());
         sb.append(" ");
         sb.append(streetNumber.getLongName());

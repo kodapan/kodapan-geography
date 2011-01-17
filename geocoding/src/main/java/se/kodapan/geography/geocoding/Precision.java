@@ -52,10 +52,16 @@ public enum Precision implements Serializable {
   }
 
   public boolean morePreciseThan(Precision precision) {
+    if (precision == null) {
+      return true;
+    }
     return precision.integerValue() > integerValue();
   }
 
   public boolean morePreciseThanOrEqualTo(Precision precision) {
+    if (precision == null) {
+      return true;
+    }
     return precision.integerValue() >= integerValue();
   }
 
