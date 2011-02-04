@@ -21,10 +21,10 @@ package se.kodapan.geography.polygon;
  */
 public interface Envelope extends Polygon {
 
-  public abstract Coordinate getSouthWest();
-  public abstract Coordinate getSouthEast();
-  public abstract Coordinate getNorthEast();
-  public abstract Coordinate getNorthWest();
+  public abstract Coordinate getSouthwest();
+  public abstract Coordinate getSoutheast();
+  public abstract Coordinate getNortheast();
+  public abstract Coordinate getNorthwest();
 
   public abstract void addBounds(Polygon polygon);
 

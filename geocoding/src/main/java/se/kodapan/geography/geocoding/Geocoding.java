@@ -49,7 +49,7 @@ public class Geocoding extends AbstractPolygonDecorator implements Result, Coord
     for (Result result : results) {
       envelope.addBounds(result.getLocation());
     }
-    return envelope.getSouthWest().archDistance(envelope.getNorthEast());
+    return envelope.getSouthwest().archDistance(envelope.getNortheast());
 
   }
 

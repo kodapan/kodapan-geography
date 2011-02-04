@@ -42,12 +42,12 @@ public abstract class AbstractSingleCoordinatePolygon extends AbstractEnvelope i
   }
 
   @Override
-  public Coordinate getSouthWest() {
+  public Coordinate getSouthwest() {
     return coordinate;
   }
 
   @Override
-  public Coordinate getNorthEast() {
+  public Coordinate getNortheast() {
     return coordinate;
   }
 

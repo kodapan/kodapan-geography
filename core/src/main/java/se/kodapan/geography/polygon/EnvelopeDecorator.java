@@ -28,23 +28,23 @@ public abstract class EnvelopeDecorator implements Envelope {
   public abstract Envelope getDecoratedEnvelope();   
 
   @Override
-  public Coordinate getSouthWest() {
-    return getDecoratedEnvelope().getSouthWest();
+  public Coordinate getSouthwest() {
+    return getDecoratedEnvelope().getSouthwest();
   }
 
   @Override
-  public Coordinate getSouthEast() {
-    return getDecoratedEnvelope().getSouthEast();
+  public Coordinate getSoutheast() {
+    return getDecoratedEnvelope().getSoutheast();
   }
 
   @Override
-  public Coordinate getNorthEast() {
-    return getDecoratedEnvelope().getNorthEast();
+  public Coordinate getNortheast() {
+    return getDecoratedEnvelope().getNortheast();
   }
 
   @Override
-  public Coordinate getNorthWest() {
-    return getDecoratedEnvelope().getNorthWest();
+  public Coordinate getNorthwest() {
+    return getDecoratedEnvelope().getNorthwest();
   }
 
   @Override

@@ -76,8 +76,8 @@ public class GoogleGeocoder extends Geocoder {
       EnvelopeImpl envelope = new EnvelopeImpl();
       envelope.addBounds(request.getBounds());
       googleRequest.setBounds(new com.google.maps.geocoding.Envelope(
-          new LatLng(envelope.getSouthWest().getLatitude(), envelope.getSouthWest().getLongitude()),
-          new LatLng(envelope.getNorthEast().getLatitude(), envelope.getNorthEast().getLongitude())));
+          new LatLng(envelope.getSouthwest().getLatitude(), envelope.getSouthwest().getLongitude()),
+          new LatLng(envelope.getNortheast().getLatitude(), envelope.getNortheast().getLongitude())));
     }
 
     sendRequest(geocoding, googleRequest);

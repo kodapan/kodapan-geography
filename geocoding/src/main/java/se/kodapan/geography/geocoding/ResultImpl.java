@@ -88,8 +88,8 @@ public class ResultImpl extends AbstractResult implements Serializable {
       this.bounds = null;
     } else {
       EnvelopeImpl envelope = new EnvelopeImpl(addressComponents.getFormattedAddress());
-      envelope.setNorthEast(new CoordinateImpl(bounds.getNorthEast()));
-      envelope.setSouthWest(new CoordinateImpl(bounds.getSouthWest()));
+      envelope.setNortheast(new CoordinateImpl(bounds.getNortheast()));
+      envelope.setSouthwest(new CoordinateImpl(bounds.getSouthwest()));
       this.bounds = envelope;
     }
   }
@@ -105,8 +105,8 @@ public class ResultImpl extends AbstractResult implements Serializable {
       this.viewPort = null;
     } else {
       EnvelopeImpl envelope = new EnvelopeImpl(addressComponents.getFormattedAddress());
-      envelope.setNorthEast(new CoordinateImpl(viewPort.getNorthEast()));
-      envelope.setSouthWest(new CoordinateImpl(viewPort.getSouthWest()));
+      envelope.setNortheast(new CoordinateImpl(viewPort.getNortheast()));
+      envelope.setSouthwest(new CoordinateImpl(viewPort.getSouthwest()));
       this.viewPort = envelope;
     }
   }

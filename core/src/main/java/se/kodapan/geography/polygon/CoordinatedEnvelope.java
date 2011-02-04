@@ -26,28 +26,28 @@ public abstract class CoordinatedEnvelope extends AbstractEnvelope {
   private static final long serialVersionUID = 1l;
 
 
-  private Coordinate southWest;
-  private Coordinate northEast;
+  private Coordinate southwest;
+  private Coordinate northeast;
 
   @Override
   protected void coordinateFactory() {
-    southWest = new CoordinateImpl();
-    northEast = new CoordinateImpl();
+    southwest = new CoordinateImpl();
+    northeast = new CoordinateImpl();
   }
 
-  public Coordinate getSouthWest() {
-    return southWest;
+  public Coordinate getSouthwest() {
+    return southwest;
   }
 
-  public void setSouthWest(Coordinate southWest) {
-    this.southWest = southWest;
+  public void setSouthwest(Coordinate southwest) {
+    this.southwest = southwest;
   }
 
-  public Coordinate getNorthEast() {
-    return northEast;
+  public Coordinate getNortheast() {
+    return northeast;
   }
 
-  public void setNorthEast(Coordinate northEast) {
-    this.northEast = northEast;
+  public void setNortheast(Coordinate northeast) {
+    this.northeast = northeast;
   }
 }

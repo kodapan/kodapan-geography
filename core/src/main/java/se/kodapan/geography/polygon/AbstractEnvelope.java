@@ -48,25 +48,25 @@ public abstract class AbstractEnvelope
 
   public final void addBounds(double latitude, double longitude) {
 
-    if (getNorthEast() == null) {
+    if (getNortheast() == null) {
       coordinateFactory();
-      getNorthEast().setLatitude(latitude);
-      getSouthWest().setLatitude(latitude);
+      getNortheast().setLatitude(latitude);
+      getSouthwest().setLatitude(latitude);
 
-      getNorthEast().setLongitude(longitude);
-      getSouthWest().setLongitude(longitude);
+      getNortheast().setLongitude(longitude);
+      getSouthwest().setLongitude(longitude);
 
     } else {
-      if (latitude > getNorthEast().getLatitude()) {
-        getNorthEast().setLatitude(latitude);
-      } else if (latitude < getSouthWest().getLatitude()) {
-        getSouthWest().setLatitude(latitude);
+      if (latitude > getNortheast().getLatitude()) {
+        getNortheast().setLatitude(latitude);
+      } else if (latitude < getSouthwest().getLatitude()) {
+        getSouthwest().setLatitude(latitude);
       }
 
-      if (getNorthEast().getLongitude() > longitude) {
-        getNorthEast().setLongitude(longitude);
-      } else if (getSouthWest().getLongitude() < longitude) {
-        getSouthWest().setLongitude(longitude);
+      if (getNortheast().getLongitude() > longitude) {
+        getNortheast().setLongitude(longitude);
+      } else if (getSouthwest().getLongitude() < longitude) {
+        getSouthwest().setLongitude(longitude);
       }
     }
   }
@@ -87,16 +87,16 @@ public abstract class AbstractEnvelope
         Coordinate coordinate;
         switch (state) {
           case 0:
-            coordinate = getNorthEast();
+            coordinate = getNortheast();
             break;
           case 1:
-            coordinate = getNorthWest();
+            coordinate = getNorthwest();
             break;
           case 2:
-            coordinate = getSouthWest();
+            coordinate = getSouthwest();
             break;
           case 3:
-            coordinate = getSouthEast();
+            coordinate = getSoutheast();
             break;
           default:
             throw new NoSuchElementException();
@@ -115,27 +115,27 @@ public abstract class AbstractEnvelope
   @Override
   public boolean contains(Coordinate coordinate) {
 
-    if (getNorthEast().getLongitude() > getSouthWest().getLongitude()) {
+    if (getNortheast().getLongitude() > getSouthwest().getLongitude()) {
 
       // spans international date line
       // todo these should be transient
 
       EnvelopeImpl asianSide = new EnvelopeImpl();
-      asianSide.setNorthEast(new CoordinateImpl(getNorthEast().getLatitude(), 180));
-      asianSide.setSouthWest(new CoordinateImpl(getSouthWest().getLatitude(), getSouthWest().getLongitude()));
+      asianSide.setNortheast(new CoordinateImpl(getNortheast().getLatitude(), 180));
+      asianSide.setSouthwest(new CoordinateImpl(getSouthwest().getLatitude(), getSouthwest().getLongitude()));
 
       EnvelopeImpl americanSide = new EnvelopeImpl();
-      asianSide.setNorthEast(new CoordinateImpl(getNorthEast().getLatitude(), getNorthEast().getLongitude()));
-      asianSide.setSouthWest(new CoordinateImpl(getSouthWest().getLatitude(), -180));
+      asianSide.setNortheast(new CoordinateImpl(getNortheast().getLatitude(), getNortheast().getLongitude()));
+      asianSide.setSouthwest(new CoordinateImpl(getSouthwest().getLatitude(), -180));
 
       return asianSide.contains(coordinate) || americanSide.contains(coordinate);
 
     } else {
 
-      return coordinate.getLatitude() <= getNorthEast().getLatitude()
-          && coordinate.getLongitude() >= getNorthEast().getLongitude()
-          && coordinate.getLatitude() >= getSouthWest().getLatitude()
-          && coordinate.getLongitude() <= getSouthWest().getLongitude();
+      return coordinate.getLatitude() <= getNortheast().getLatitude()
+          && coordinate.getLongitude() >= getNortheast().getLongitude()
+          && coordinate.getLatitude() >= getSouthwest().getLatitude()
+          && coordinate.getLongitude() <= getSouthwest().getLongitude();
     }
   }
 
@@ -145,13 +145,13 @@ public abstract class AbstractEnvelope
 
     @Override
     public double getLatitude() {
-      return (getSouthWest().getLatitude() + getNorthEast().getLatitude()) / 2d;
+      return (getSouthwest().getLatitude() + getNortheast().getLatitude()) / 2d;
 
     }
 
     @Override
     public double getLongitude() {
-      return (getSouthWest().getLongitude() + getNorthEast().getLongitude()) / 2d;
+      return (getSouthwest().getLongitude() + getNortheast().getLongitude()) / 2d;
     }
 
     @Override
@@ -167,69 +167,69 @@ public abstract class AbstractEnvelope
   };
 
 
-  private final AbstractCoordinate southEast = new AbstractCoordinate() {
+  private final AbstractCoordinate southeast = new AbstractCoordinate() {
 
     private static final long serialVersionUID = 1l;
 
     @Override
     public double getLatitude() {
-      return getSouthWest().getLatitude();
+      return getSouthwest().getLatitude();
 
     }
 
     @Override
     public double getLongitude() {
-      return getNorthEast().getLongitude();
+      return getNortheast().getLongitude();
     }
 
     @Override
     public void setLatitude(double latitude) {
-      getSouthWest().setLatitude(latitude);
+      getSouthwest().setLatitude(latitude);
     }
 
     @Override
     public void setLongitude(double longitude) {
-      getNorthEast().setLatitude(longitude);
+      getNortheast().setLatitude(longitude);
     }
 
   };
 
 
-  private final AbstractCoordinate northWest = new AbstractCoordinate() {
+  private final AbstractCoordinate northwest = new AbstractCoordinate() {
 
     private static final long serialVersionUID = 1l;
 
     @Override
     public double getLatitude() {
-      return getNorthEast().getLatitude();
+      return getNortheast().getLatitude();
 
     }
 
     @Override
     public double getLongitude() {
-      return getSouthWest().getLongitude();
+      return getSouthwest().getLongitude();
     }
 
     @Override
     public void setLatitude(double latitude) {
-      getNorthEast().setLatitude(latitude);
+      getNortheast().setLatitude(latitude);
     }
 
     @Override
     public void setLongitude(double longitude) {
-      getSouthWest().setLongitude(longitude);
+      getSouthwest().setLongitude(longitude);
     }
 
   };
 
   @Override
-  public Coordinate getSouthEast() {
-    return southEast;
+  public Coordinate getSoutheast() {
+    return southeast;
   }
 
   @Override
-  public AbstractCoordinate getNorthWest() {
-    return northWest;
+  public AbstractCoordinate getNorthwest() {
+    return northwest;
   }
 
   @Override
@@ -239,6 +239,6 @@ public abstract class AbstractEnvelope
 
   @Override
   public double archDistanceDiagonal() {
-    return getSouthWest().archDistance(getNorthEast());
+    return getSouthwest().archDistance(getNortheast());
   }
 }
