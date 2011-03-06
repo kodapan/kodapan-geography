@@ -17,12 +17,6 @@
   <dependencies>
 
     <dependency>
-      <groupId>se.kodapan.common</groupId>
-      <artifactId>common</artifactId>
-      <version>0.1-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>1.5.6</version>
@@ -79,15 +73,59 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <encoding>UTF-8</encoding>          
+          <encoding>UTF-8</encoding>
           <source>1.6</source>
           <target>1.6</target>
         </configuration>
       </plugin>
 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>2.1.2</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
 
   </build>
+
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+  <distributionManagement>
+    <repository>
+      <id>kodapan</id>
+      <url>scp://kodapan.se/home/kalle/www/kodapan/maven/repository</url>
+    </repository>
+  </distributionManagement>
 
   <developers>
     <developer>
@@ -102,15 +140,6 @@
       <timezone>+1</timezone>
     </developer>
   </developers>
-
-  <distributionManagement>
-    <repository>
-      <id>kodapan</id>
-      <name>kodapan</name>
-      <url>scp://kodapan.se/home/kalle/www/kodapan/maven/repository</url>
-    </repository>
-  </distributionManagement>
-
 
   <mailingLists>
     <mailingList>
@@ -129,5 +158,7 @@
     <system>github</system>
     <url>http://github.com/karlwettin/kodapan-geography/issues</url>
   </issueManagement>
+
+
 
 </project>

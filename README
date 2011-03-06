@@ -34,7 +34,9 @@ There is virtually no documentation but I hope the API is simple enough.
 
 Module geocoding contains an abstract API and a Google XML service implementation, which has the best API examples:
 
-http://github.com/karlwettin/kodapan-geography/blob/master/geocoding/src/test/java/se/kodapan/geography/geocoding/TestGeocoder.java
+<http://github.com/karlwettin/kodapan-geography/blob/master/geocoding/src/test/java/se/kodapan/geography/geocoding/TestGeocoder.java>
+
+Also available in maven repository at <http://kodapan.se/maven/repository>.
 
 
 karl.wettin@gmail.com
