@@ -13,7 +13,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package se.kodapan.geography.domain;
+package se.kodapan.geography.tools;
+
+import se.kodapan.geography.domain.Coordinate;
+import se.kodapan.geography.domain.PolygonImpl;
 
 import java.util.*;
 
