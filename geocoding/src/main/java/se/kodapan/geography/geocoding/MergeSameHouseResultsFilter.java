@@ -60,7 +60,7 @@ public class MergeSameHouseResultsFilter extends ResponseFilter {
           }
         }
 
-        double kmDistance = result.getLocation().archDistance(result2.getLocation());
+        double kmDistance = result.getLocation().arcDistance(result2.getLocation());
         if (kmDistance <= maxKmDistance) {
 
           AddressComponent houseNumber2 = result2.getAddressComponents().get("street_number");

@@ -47,7 +47,7 @@ public class Geocoding extends AbstractPolygonDecorator implements Result, Coord
     for (Result result : results) {
       envelope.addBounds(result.getLocation());
     }
-    return envelope.getSouthwest().archDistance(envelope.getNortheast());
+    return envelope.getSouthwest().arcDistance(envelope.getNortheast());
 
   }
 
@@ -131,7 +131,7 @@ public class Geocoding extends AbstractPolygonDecorator implements Result, Coord
   }
 
   public double archDistance(Geocoding that) {
-    return archDistance((Polygon) that);
+    return arcDistance((Polygon) that);
   }
 
 

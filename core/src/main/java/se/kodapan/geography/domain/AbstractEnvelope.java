@@ -232,8 +232,8 @@ public abstract class AbstractEnvelope
   }
 
   @Override
-  public double archDistanceDiagonal() {
-    return getSouthwest().archDistance(getNortheast());
+  public double arcDistanceDiagonal() {
+    return getSouthwest().arcDistance(getNortheast());
   }
 
   @Override

@@ -192,7 +192,7 @@ public class TestGeocoder extends TestCase {
 
   private void assertCentroidDistance(Geocoding from, Geocoding to, double minimumDistance, double maximumDistance) {
     double km;
-    km = to.getCentroid().archDistance(from.getCentroid());
+    km = to.getCentroid().arcDistance(from.getCentroid());
     assertTrue(km >= minimumDistance);
     assertTrue(km <= maximumDistance);
   }

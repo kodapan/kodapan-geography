@@ -64,12 +64,12 @@ public class PolygonDecorator implements Polygon {
   }
 
   @Override
-  public double archDistance(Polygon that) {
-    return getDecorated().archDistance(that);
+  public double arcDistance(Polygon that) {
+    return getDecorated().arcDistance(that);
   }
 
   @Override
-  public double archDistance(Coordinate that) {
-    return getDecorated().archDistance(that);
+  public double arcDistance(Coordinate that) {
+    return getDecorated().arcDistance(that);
   }
 }

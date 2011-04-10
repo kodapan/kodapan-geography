@@ -90,7 +90,7 @@ public abstract class AbstractPolygon implements Polygon {
 
 
   @Override
-  public double archDistance(Coordinate that) {
+  public double arcDistance(Coordinate that) {
     if (contains(that)) {
       return 0d;
     }
@@ -115,7 +115,7 @@ public abstract class AbstractPolygon implements Polygon {
     return true;
   }
 
-  public final double archDistance(Polygon that) {
+  public final double arcDistance(Polygon that) {
     if (contains(that) || that.contains(this)) {
       return 0d;
     }

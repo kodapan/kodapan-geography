@@ -78,7 +78,7 @@ public class ProximityScorer extends ResultsScorer {
               if (areaWeight.getKey().contains(location)) {
                 return 0d;
               }
-              return areaWeight.getKey().archDistance(location) * areaWeight.getValue();
+              return areaWeight.getKey().arcDistance(location) * areaWeight.getValue();
             }
 
             @Override
@@ -86,7 +86,7 @@ public class ProximityScorer extends ResultsScorer {
               if (areaWeight.getKey().contains(bounds) || bounds.contains(areaWeight.getKey())) {
                 return 0d;
               }
-              return areaWeight.getKey().archDistance(bounds) * areaWeight.getValue();
+              return areaWeight.getKey().arcDistance(bounds) * areaWeight.getValue();
             }
           });
           

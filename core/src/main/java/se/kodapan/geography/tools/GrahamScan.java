@@ -53,8 +53,8 @@ public class GrahamScan extends ConvexHull {
         Double slopeB = calculateSlope(lowestCoordinate, coordinate1);
 
         if (slopeA.equals(slopeB)) {
-          Double distanceAToLowestY = coordinate.archDistance(lowestCoordinate);
-          Double distanceBToLowestY = coordinate1.archDistance(lowestCoordinate);
+          Double distanceAToLowestY = coordinate.arcDistance(lowestCoordinate);
+          Double distanceBToLowestY = coordinate1.arcDistance(lowestCoordinate);
           return distanceAToLowestY.compareTo(distanceBToLowestY);
         }
 

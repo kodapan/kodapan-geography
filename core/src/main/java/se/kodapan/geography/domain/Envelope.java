@@ -32,6 +32,6 @@ public interface Envelope extends Polygon {
 
   public abstract void addBounds(double latitude, double longitude);
 
-  public abstract double archDistanceDiagonal();
+  public abstract double arcDistanceDiagonal();
 
 }

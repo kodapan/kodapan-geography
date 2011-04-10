@@ -38,7 +38,7 @@ public class DecoratedEnvelope extends EnvelopeDecorator {
   }
 
   @Override
-  public double archDistanceDiagonal() {
-    return this.decoratedEnvelope.archDistanceDiagonal();
+  public double arcDistanceDiagonal() {
+    return this.decoratedEnvelope.arcDistanceDiagonal();
   }
 }

@@ -27,8 +27,8 @@ public abstract class AbstractPolygonDecorator implements Polygon {
 
 
   @Override
-  public double archDistance(Coordinate that) {
-    return getDecoratedPolygon().archDistance(that);
+  public double arcDistance(Coordinate that) {
+    return getDecoratedPolygon().arcDistance(that);
   }
 
   @Override
@@ -52,8 +52,8 @@ public abstract class AbstractPolygonDecorator implements Polygon {
   }
 
   @Override
-  public double archDistance(Polygon that) {
-    return getDecoratedPolygon().archDistance(that);
+  public double arcDistance(Polygon that) {
+    return getDecoratedPolygon().arcDistance(that);
   }
 
   public abstract Polygon getDecoratedPolygon();

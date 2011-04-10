@@ -46,8 +46,8 @@ public abstract class CoordinateDecorator implements Coordinate {
   }
 
   @Override
-  public double archDistance(Coordinate coordinate) {
-    return getDecoratedCoordinate().archDistance(coordinate);
+  public double arcDistance(Coordinate coordinate) {
+    return getDecoratedCoordinate().arcDistance(coordinate);
   }
 
   @Override

@@ -38,7 +38,7 @@ public interface Coordinate extends Serializable {
    * @param that
    * @return distance in kilometers
    */
-  public double archDistance(Coordinate that);
+  public double arcDistance(Coordinate that);
 
   public static class CoordinateTools {
     public static double euclideanDistance(Coordinate c, Coordinate c1) {

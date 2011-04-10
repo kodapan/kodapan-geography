@@ -29,7 +29,7 @@ public class Circle extends AbstractPolygon {
     Coordinate centroid = new CoordinateImpl(envelope.getCentroid());
     double longestDistanceFromCentroid = Double.MIN_VALUE;
     for (Coordinate coordinate : coordinates) {
-      double distance = centroid.archDistance(coordinate);
+      double distance = centroid.arcDistance(coordinate);
       if (distance > longestDistanceFromCentroid) {
         longestDistanceFromCentroid = distance;
       }
@@ -90,7 +90,7 @@ public class Circle extends AbstractPolygon {
 
   @Override
   public boolean contains(Coordinate coordinate) {
-    return getCentroid().archDistance(coordinate) <= getRadiusKilometers();
+    return getCentroid().arcDistance(coordinate) <= getRadiusKilometers();
   }
 
   @Override

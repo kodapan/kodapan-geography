@@ -83,13 +83,13 @@ public abstract class EnvelopeDecorator implements Envelope {
   }
 
   @Override
-  public double archDistance(Polygon polygon) {
-    return getDecoratedEnvelope().archDistance(polygon);
+  public double arcDistance(Polygon polygon) {
+    return getDecoratedEnvelope().arcDistance(polygon);
   }
 
   @Override
-  public double archDistance(Coordinate coordinate) {
-    return getDecoratedEnvelope().archDistance(coordinate);
+  public double arcDistance(Coordinate coordinate) {
+    return getDecoratedEnvelope().arcDistance(coordinate);
   }
 
   @Override

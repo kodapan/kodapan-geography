@@ -44,8 +44,8 @@ public interface Polygon extends Serializable {
    * @param that
    * @return distance in km between two closest point of the two polygons
    */
-  public abstract double archDistance(Polygon that);
+  public abstract double arcDistance(Polygon that);
 
-  public abstract double archDistance(Coordinate that);
+  public abstract double arcDistance(Coordinate that);
 
 }

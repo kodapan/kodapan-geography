@@ -23,7 +23,7 @@ public abstract class AbstractCoordinate implements Coordinate {
 
   private static final long serialVersionUID = 1l;
 
-  public double archDistance(Coordinate that) {
+  public double arcDistance(Coordinate that) {
     return CoordinateTools.arcDistance(this, that);
   }
 
