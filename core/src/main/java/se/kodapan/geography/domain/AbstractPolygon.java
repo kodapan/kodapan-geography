@@ -25,6 +25,69 @@ public abstract class AbstractPolygon implements Polygon {
 
   private static final long serialVersionUID = 1l;
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Polygon polygon = (Polygon) o;
+
+    Iterator<Coordinate> it = iterateCoordinates();
+    Iterator<Coordinate> itThat = polygon.iterateCoordinates();
+
+    if (it != null && itThat == null) {
+      return false;
+    } else if (itThat != null && it == null) {
+      return false;
+    } else if (it == null && itThat == null) {
+      return false;
+    } else {
+
+      while (it.hasNext() && itThat.hasNext()) {
+        if (!it.next().equals(itThat.next())) {
+          return false;
+        }
+      }
+
+      return !(it.hasNext() || itThat.hasNext());
+    }
+  }
+
+  @Override
+  public int hashCode() {
+    int hashCode = 0;
+    Iterator<Coordinate> it = iterateCoordinates();
+    if (it != null) {
+      while (it.hasNext()) {
+        hashCode *= 0.5 + (it.next().hashCode() * 0.5);
+      }
+    }
+    return hashCode;
+
+
+  }
+
+  @Override
+  public String toString() {
+    Iterator<Coordinate> it = iterateCoordinates();
+    StringBuilder sb = new StringBuilder(it == null ? 50 : 1000);
+    sb.append(getClass().getSimpleName()).append("{coordinates=");
+    if (it == null) {
+      sb.append("null");
+    } else {
+      sb.append("[");
+      while (it.hasNext()) {
+        sb.append(it.next().toString());
+        if (it.hasNext()) {
+          sb.append(",");
+        }
+      }
+      sb.append("]");
+    }
+    sb.append("}");
+    return sb.toString();
+  }
+
 
   @Override
   public double archDistance(Coordinate that) {
@@ -69,7 +132,6 @@ public abstract class AbstractPolygon implements Polygon {
     }
     return closest;
   }
-
 
 
 }

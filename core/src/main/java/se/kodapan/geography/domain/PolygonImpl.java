@@ -57,4 +57,5 @@ public class PolygonImpl extends AbstractPolygon {
   public void setCoordinates(List<Coordinate> coordinates) {
     this.coordinates = coordinates;
   }
+
 }
