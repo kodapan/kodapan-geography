@@ -2,6 +2,7 @@ package se.kodapan.geography.geocoding;
 
 import se.kodapan.geography.domain.*;
 
+
 import java.util.Iterator;
 import java.util.Set;
 
@@ -13,13 +14,13 @@ import java.util.Set;
  */
 public class AddressComponentTypeFilter extends ResponseFilter {
 
-  private Set<AddressComponentType> allowedTypes;
+  private Set<String> allowedTypes;
 
   public AddressComponentTypeFilter(Geocoding geocoding) {
     super(geocoding);
   }
 
-  public AddressComponentTypeFilter(Geocoding geocoding, Set<AddressComponentType> allowedTypes) {
+  public AddressComponentTypeFilter(Geocoding geocoding, Set<String> allowedTypes) {
     super(geocoding);
     this.allowedTypes = allowedTypes;
   }
@@ -30,7 +31,7 @@ public class AddressComponentTypeFilter extends ResponseFilter {
       for (Iterator<AddressComponent> it = result.getAddressComponents().iterator(); it.hasNext();) {
         AddressComponent component = it.next();
         boolean allowed = false;
-        for (AddressComponentType type : allowedTypes) {
+        for (String type : allowedTypes) {
           if (component.getTypes().contains(type)) {
             allowed = true;
             break;
@@ -44,11 +45,11 @@ public class AddressComponentTypeFilter extends ResponseFilter {
     return geocoding;
   }
 
-  public Set<AddressComponentType> getAllowedTypes() {
+  public Set<String> getAllowedTypes() {
     return allowedTypes;
   }
 
-  public void setAllowedTypes(Set<AddressComponentType> allowedTypes) {
+  public void setAllowedTypes(Set<String> allowedTypes) {
     this.allowedTypes = allowedTypes;
   }
 }

@@ -19,6 +19,7 @@ import com.google.maps.geocoding.*;
 import com.google.maps.geocoding.AddressComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import se.kodapan.geography.polygon.*;
 import se.kodapan.geography.polygon.Envelope;
 
@@ -187,13 +188,7 @@ public class GoogleGeocoder extends Geocoder {
         addressComponent.setLongName(googleComponent.getLongName());
         addressComponent.setShortName(googleComponent.getShortName());
         for (String type : googleComponent.getTypes()) {
-          se.kodapan.geography.domain.AddressComponentType enumType = null;
-          try {
-            enumType = se.kodapan.geography.domain.AddressComponentType.valueOf(type);
-          } catch (Exception e) {
-            enumType = se.kodapan.geography.domain.AddressComponentType.unknown;
-          }
-          addressComponent.getTypes().add(enumType);
+          addressComponent.getTypes().add(type);
         }
         result.getAddressComponents().add(addressComponent);
       }

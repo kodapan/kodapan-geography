@@ -15,11 +15,10 @@
  */
 package se.kodapan.geography.geocoding;
 
-import se.kodapan.geography.domain.AddressComponentType;
+
 import se.kodapan.geography.polygon.Polygon;
 
 import java.io.Serializable;
-import java.util.Set;
 
 /**
  * @author kalle

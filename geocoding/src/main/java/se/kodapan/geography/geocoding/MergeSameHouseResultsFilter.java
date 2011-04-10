@@ -1,7 +1,7 @@
 package se.kodapan.geography.geocoding;
 
-import se.kodapan.geography.domain.AddressComponent;
-import se.kodapan.geography.domain.AddressComponentType;
+import se.kodapan.geography.domain.*;
+
 
 import java.util.*;
 
@@ -33,16 +33,16 @@ public class MergeSameHouseResultsFilter extends ResponseFilter {
     Set<Result> removed = new HashSet<Result>();
     for (Result result : new ArrayList<Result>(geocoding.getResults())) {
 
-      AddressComponent streetName = result.getAddressComponents().get(AddressComponentType.route);
+      AddressComponent streetName = result.getAddressComponents().get("route");
       if (streetName == null) {
-        streetName = result.getAddressComponents().get(AddressComponentType.street_address);
+        streetName = result.getAddressComponents().get("street_address");
       }
       // todo stugbyar är sublocality! kvistagården är en premise!
       if (streetName == null) {
         continue;
       }
 
-      AddressComponent houseNumber = result.getAddressComponents().get(AddressComponentType.street_number);
+      AddressComponent houseNumber = result.getAddressComponents().get("street_number");
 
       List<Result> results = new ArrayList<Result>();
       results.add(result);
@@ -52,9 +52,9 @@ public class MergeSameHouseResultsFilter extends ResponseFilter {
           break;
         }
 
-        AddressComponent streetName2 = result2.getAddressComponents().get(AddressComponentType.street_address);
+        AddressComponent streetName2 = result2.getAddressComponents().get("street_address");
         if (streetName2 == null) {
-          streetName2 = result2.getAddressComponents().get(AddressComponentType.route);
+          streetName2 = result2.getAddressComponents().get("route");
           if (streetName2 == null) {
             continue;
           }
@@ -63,7 +63,7 @@ public class MergeSameHouseResultsFilter extends ResponseFilter {
         double kmDistance = result.getLocation().archDistance(result2.getLocation());
         if (kmDistance <= maxKmDistance) {
 
-          AddressComponent houseNumber2 = result2.getAddressComponents().get(AddressComponentType.street_number);
+          AddressComponent houseNumber2 = result2.getAddressComponents().get("street_number");
           if (houseNumber == null && houseNumber2 == null
               || (houseNumber != null && houseNumber.equals(houseNumber2))) {
             results.add(result2);
@@ -100,7 +100,7 @@ public class MergeSameHouseResultsFilter extends ResponseFilter {
           newResult.getAddressComponents().addAll(result2.getAddressComponents());
         }
         // sometimes there are several postings for the same street name with small diffs. this selects the one with the longest name.
-        List<AddressComponent> routes = newResult.getAddressComponents().list(AddressComponentType.route);
+        List<AddressComponent> routes = newResult.getAddressComponents().list("route");
         Collections.sort(routes, new Comparator<AddressComponent>(){
           @Override
           public int compare(AddressComponent addressComponent, AddressComponent addressComponent1) {

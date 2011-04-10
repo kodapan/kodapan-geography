@@ -28,7 +28,7 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
 
   private static final long serialVersionUID = 1l;
 
-  private MapSet<AddressComponentType, AddressComponent> typeIndex = new MapSet<AddressComponentType, AddressComponent>();
+  private MapSet<String, AddressComponent> typeIndex = new MapSet<String, AddressComponent>();
   private String formattedAddress;
 
   public AddressComponents() {
@@ -41,9 +41,9 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
   }
 
   public void reconstructIndex() {
-    MapSet<AddressComponentType, AddressComponent> typeIndex = new MapSet<AddressComponentType, AddressComponent>();
+    MapSet<String, AddressComponent> typeIndex = new MapSet<String, AddressComponent>();
     for (AddressComponent component : this) {
-      for (AddressComponentType type : component.getTypes()) {
+      for (String type : component.getTypes()) {
         typeIndex.add(type, component);
       }
     }
@@ -116,7 +116,7 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
     return component;
   }
 
-  public boolean removeAll(AddressComponentType... types) {
+  public boolean removeAll(String... types) {
     return removeAll(list(types));
   }
 
@@ -131,7 +131,7 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
   }
 
   private void removeFromIndex(AddressComponent component) {
-    for (AddressComponentType type : component.getTypes()) {
+    for (String type : component.getTypes()) {
       typeIndex.get(type).remove(component);
     }
   }
@@ -143,7 +143,7 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
   }
 
   private void indexComponent(AddressComponent component) {
-    for (AddressComponentType type : component.getTypes()) {
+    for (String type : component.getTypes()) {
       typeIndex.add(type, component);
     }
   }
@@ -168,7 +168,7 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
     return previous;
   }
 
-  public AddressComponent getUnique(AddressComponentType... types) {
+  public AddressComponent getUnique(String... types) {
     List<AddressComponent> list = list(types);
     if (list.size() == 0) {
       return null;
@@ -180,7 +180,7 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
   }
 
 
-  public AddressComponent get(Collection<AddressComponentType> types) {
+  public AddressComponent get(Collection<String> types) {
     List<AddressComponent> list = list(types);
     if (list.size() != 1) {
       return null;
@@ -190,15 +190,15 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
   }
 
 
-  public AddressComponent get(AddressComponentType... types) {
+  public AddressComponent get(String... types) {
     return get(Arrays.asList(types));
   }
 
-  public List<AddressComponent> list(AddressComponentType... types) {
+  public List<AddressComponent> list(String... types) {
     return list(Arrays.asList(types));
   }
 
-  public List<AddressComponent> list(Collection<AddressComponentType> types) {
+  public List<AddressComponent> list(Collection<String> types) {
     List<AddressComponent> list = new ArrayList<AddressComponent>();
     Set<AddressComponent> set = typeIndex.get(types.iterator().next());
     if (set != null && set.size() > 0) {
@@ -214,9 +214,9 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
   public void setFormattedAddress(Locale locale) {
     StringBuilder sb = new StringBuilder();
 
-    AddressComponent route = get(AddressComponentType.route);
+    AddressComponent route = get("route");
 
-    AddressComponent streetNumber = get(AddressComponentType.street_number);
+    AddressComponent streetNumber = get("street_number");
     if (streetNumber != null) {
       if (locale.getLanguage().equals("en")) {
 
@@ -242,7 +242,7 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
         sb.append(", ");
 
       } else {
-        AddressComponent streetAddress = get(AddressComponentType.street_address);
+        AddressComponent streetAddress = get("street_address");
         if (streetAddress != null) {
           sb.append(streetAddress.getLongName());
           sb.append(", ");
@@ -253,7 +253,7 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
     }
 
 
-    for (AddressComponent subLocality : list(AddressComponentType.sublocality, AddressComponentType.political)) {
+    for (AddressComponent subLocality : list("sublocality", "political")) {
       if (subLocality != null) {
         sb.append(subLocality.getLongName());
         sb.append(", ");
@@ -261,33 +261,33 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
     }
 
     // todo find the most inner postal code, but only where there is one most inner postal code in the result. there might be several for a city, etc.
-    List<AddressComponent> postalCodes = list(AddressComponentType.postal_code);
+    List<AddressComponent> postalCodes = list("postal_code");
     if (postalCodes != null && postalCodes.size() == 1) {
       AddressComponent postalCode = postalCodes.iterator().next();
       sb.append(postalCode.getLongName());
       sb.append(", ");
     }
 
-    AddressComponent postalTown = get(AddressComponentType.postal_town, AddressComponentType.political);
+    AddressComponent postalTown = get("postal_town", "political");
     if (postalTown != null) {
       sb.append(postalTown.getLongName());
       sb.append(", ");
     }
 
-    AddressComponent city = get(AddressComponentType.locality, AddressComponentType.political);
+    AddressComponent city = get("locality", "political");
     if (city != null) {
       sb.append(city.getLongName());
       sb.append(", ");
     }
 
-    AddressComponent admin1 = get(AddressComponentType.administrative_area_level_1, AddressComponentType.political);
+    AddressComponent admin1 = get("administrative_area_level_1", "political");
     if (admin1 != null) {
       sb.append(admin1.getLongName());
       sb.append(", ");
     }
 
 
-    AddressComponent country = get(AddressComponentType.country);
+    AddressComponent country = get("country");
     if (country != null) {
       sb.append(country.getLongName());
       sb.append(", ");
@@ -304,11 +304,11 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
   }
 
 
-  public MapSet<AddressComponentType, AddressComponent> getTypeIndex() {
+  public MapSet<String, AddressComponent> getTypeIndex() {
     return typeIndex;
   }
 
-  public void setTypeIndex(MapSet<AddressComponentType, AddressComponent> typeIndex) {
+  public void setTypeIndex(MapSet<String, AddressComponent> typeIndex) {
     this.typeIndex = typeIndex;
   }
 

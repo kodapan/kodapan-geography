@@ -4,7 +4,7 @@ package se.kodapan.geography.geocoding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.kodapan.geography.domain.AddressComponent;
-import se.kodapan.geography.domain.AddressComponentType;
+
 import se.kodapan.geography.domain.AddressComponents;
 
 import java.util.*;
@@ -43,25 +43,25 @@ public class AddressComponentsRequestAugmenter implements RequestAugmenter {
 
     LinkedList<AddressComponent> components = new LinkedList<AddressComponent>();
 
-    AddressComponent country = this.components.get(AddressComponentType.country);
+    AddressComponent country = this.components.get("country");
     if (country != null) {
       components.addLast(country);
     }
 
-    AddressComponent administrativeArea1 = this.components.get(AddressComponentType.political, AddressComponentType.administrative_area_level_1);
+    AddressComponent administrativeArea1 = this.components.get("political", "administrative_area_level_1");
     if (administrativeArea1 != null) {
       components.addLast(administrativeArea1);
     }
 
-    for (AddressComponent district : this.components.list(AddressComponentType.political, AddressComponentType.locality)) {
+    for (AddressComponent district : this.components.list("political", "locality")) {
       components.addLast(district);
     }
 
-    AddressComponent postalTown = this.components.get(AddressComponentType.political, AddressComponentType.postal_town);
+    AddressComponent postalTown = this.components.get("political", "postal_town");
     if (postalTown != null) {
       components.addLast(postalTown);
     } else {
-      AddressComponent city = this.components.get(AddressComponentType.political, AddressComponentType.locality);
+      AddressComponent city = this.components.get("political", "locality");
       if (city != null) {
         components.addLast(city);
       }

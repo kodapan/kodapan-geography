@@ -30,22 +30,26 @@ public class AddressComponent implements Serializable {
   
   private String longName;
   private String shortName;
-  private Set<AddressComponentType> types;
+  private Set<String> types;
 
   public AddressComponent() {
-    this (null, null, new HashSet<AddressComponentType>());
+    this (null, null, new HashSet<String>());
   }
 
-  public AddressComponent(String longName, AddressComponentType... types) {
-    this (longName, (String)null, new HashSet<AddressComponentType>(Arrays.asList(types)));
+  public AddressComponent(String longName, String type) {
+    this (longName, null, new String[]{type});
   }
 
-  public AddressComponent(String longName, String shortName, AddressComponentType... types) {
-    this (longName, shortName, new HashSet<AddressComponentType>(Arrays.asList(types)));
+  public AddressComponent(String longName, String[] types) {
+    this (longName, null, new HashSet<String>(Arrays.asList(types)));
+  }
+
+  public AddressComponent(String longName, String shortName, String[] types) {
+    this (longName, shortName, new HashSet<String>(Arrays.asList(types)));
   }
 
 
-  public AddressComponent(String longName, String shortName, Set<AddressComponentType> types) {
+  public AddressComponent(String longName, String shortName, Set<String> types) {
     if (longName == null) {
       longName = shortName;
     } else if (shortName == null) {
@@ -86,11 +90,11 @@ public class AddressComponent implements Serializable {
   }
 
 
-  public Set<AddressComponentType> getTypes() {
+  public Set<String> getTypes() {
     return types;
   }
 
-  public void setTypes(Set<AddressComponentType> types) {
+  public void setTypes(Set<String> types) {
     this.types = types;
   }
 
