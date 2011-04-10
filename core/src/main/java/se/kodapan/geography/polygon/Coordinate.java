@@ -15,9 +15,6 @@
  */
 package se.kodapan.geography.polygon;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.Serializable;
 import java.util.Random;
 
@@ -43,9 +40,6 @@ public interface Coordinate extends Serializable {
    */
   public double archDistance(Coordinate that);
 
-
-  public static final Logger log = LoggerFactory.getLogger(Coordinate.class);
-
   public static class CoordinateTools {
     public static double euclideanDistance(Coordinate c, Coordinate c1) {
 
@@ -61,7 +55,7 @@ public interface Coordinate extends Serializable {
     /**
      * If any coordinates are too close to each other this will spread them out randomly
      *
-     * @param coordinates 0.00003 is the very least you should have. just a few meters.
+     * @param coordinates value 0.00003 is the very least to use in sweden on a maxed zoomed in gmap. just a few meters.
      */
     public static void spreadOut(Iterable<Coordinate> coordinates, double minimumDistance) {
       Random random = new Random(0);
@@ -104,7 +98,7 @@ public interface Coordinate extends Serializable {
       }
 
       ms = System.currentTimeMillis() - ms;
-      log.info(iterations + " iterations and " + distanceChecks + " distance calculations was required to remove collisions in " + ms + " milliseconds.");
+      //log.info(iterations + " iterations and " + distanceChecks + " distance calculations was required to remove collisions in " + ms + " milliseconds.");
 
     }
 

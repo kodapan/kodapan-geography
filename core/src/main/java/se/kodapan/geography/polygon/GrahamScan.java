@@ -15,9 +15,6 @@
  */
 package se.kodapan.geography.polygon;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.*;
 
 /**
@@ -30,7 +27,7 @@ import java.util.*;
  */
 public class GrahamScan extends ConvexHull {
 
-  private static final Logger log = LoggerFactory.getLogger(ConvexHull.class);
+  private static final long serialVersionUID = 1l;
 
   @Override
   public PolygonImpl factory(Set<Coordinate> coordinates) {
@@ -70,7 +67,7 @@ public class GrahamScan extends ConvexHull {
     });
 
     // remove collinear coordinates
-    // slows down the algorithm but might produce less points in the hull
+    // "slows down" the algorithm but might produce less points in the hull
     Coordinate lowestLatitude = sortedCoordinates.get(0);
     for (int i = sortedCoordinates.size() - 1; i > 1; i--) {
       Double slopeB = calculateSlope(lowestLatitude, sortedCoordinates.get(i));
@@ -100,12 +97,7 @@ public class GrahamScan extends ConvexHull {
     }
     stack.push(sortedCoordinates.get(0));
 
-    PolygonImpl hull = new PolygonImpl(stack);
-    if (log.isDebugEnabled()) {
-      ms = System.currentTimeMillis() - ms;
-      log.debug("Took " + ms + " milliseconds to produce convex hull from " + coordinates.size() + " coordinates, yielding " + stack.size() + " coordinates.");
-    }
-    return hull;
+    return new PolygonImpl(stack);
   }
 
   public Coordinate findCoordinateWithLowestLatitudeAndLongitude(List<Coordinate> coordinates) {

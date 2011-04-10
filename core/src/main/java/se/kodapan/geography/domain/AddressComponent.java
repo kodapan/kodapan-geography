@@ -15,8 +15,6 @@
  */
 package se.kodapan.geography.domain;
 
-import se.kodapan.io.SerializableBean;
-
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -26,7 +24,7 @@ import java.util.Set;
  * @author kalle
  * @since 2010-jun-22 21:18:12
  */
-public class AddressComponent extends SerializableBean {
+public class AddressComponent implements Serializable {
 
   private static final long serialVersionUID = 1l;
   

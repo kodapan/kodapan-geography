@@ -15,13 +15,14 @@
  */
 package se.kodapan.geography.polygon;
 
+import java.io.Serializable;
 import java.util.Set;
 
 /**
  * @author kalle
  * @since 2010-sep-04 21:32:57
  */
-public abstract class ConvexHull {
+public abstract class ConvexHull implements Serializable {
     
   public abstract Polygon factory(Set<Coordinate> coordinates);
 
