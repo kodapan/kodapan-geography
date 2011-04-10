@@ -15,16 +15,11 @@
  */
 package se.kodapan.geography.domain;
 
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-
 /**
  * @author kalle
  * @since 2010-mar-16 06:42:18
  */
-public class CoordinateImpl extends AbstractCoordinate implements Externalizable {
+public class CoordinateImpl extends AbstractCoordinate {
 
   private static final long serialVersionUID = 1l;
 
@@ -32,27 +27,6 @@ public class CoordinateImpl extends AbstractCoordinate implements Externalizable
   private Double longitude;
 
   public CoordinateImpl() {
-  }
-
-  @Override
-  public void writeExternal(ObjectOutput objectOutput) throws IOException {
-    objectOutput.writeInt(2);
-    objectOutput.writeObject(latitude);
-    objectOutput.writeObject(longitude);
-  }
-
-  @Override
-  public void readExternal(ObjectInput objectInput) throws IOException, ClassNotFoundException {
-    int version = objectInput.readInt();
-    if (version == 1) {
-      latitude = objectInput.readDouble();
-      longitude = objectInput.readDouble();
-    } else if (version == 2) {
-      latitude = (Double)objectInput.readObject();
-      longitude = (Double)objectInput.readObject();
-    } else {
-      throw new ClassNotFoundException("Unknown local version " + version + " of " + getClass().getName());
-    }
   }
 
   public CoordinateImpl(Coordinate coordinate) {
