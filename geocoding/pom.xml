@@ -8,17 +8,17 @@
     <artifactId>geography-parent</artifactId>
     <version>0.2.1-SNAPSHOT</version>
   </parent>
-  <groupId>${parent.groupId}</groupId>
+  <groupId>${project.parent.groupId}</groupId>
   <artifactId>geocoding</artifactId>
-  <version>${parent.version}</version>
+  <version>${project.parent.version}</version>
 
   <packaging>jar</packaging>
 
   <dependencies>
     <dependency>
-      <groupId>${parent.groupId}</groupId>
+      <groupId>${project.parent.groupId}</groupId>
       <artifactId>core</artifactId>
-      <version>${parent.version}</version>
+      <version>${project.parent.version}</version>
     </dependency>
 
 

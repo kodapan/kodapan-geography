@@ -10,6 +10,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>domain</module>
     <module>core</module>
     <module>geocoding</module>
   </modules>
