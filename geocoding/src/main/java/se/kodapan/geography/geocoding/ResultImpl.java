@@ -15,11 +15,9 @@
  */
 package se.kodapan.geography.geocoding;
 
-import se.kodapan.geography.domain.AddressComponents;
-import se.kodapan.geography.polygon.Coordinate;
-import se.kodapan.geography.polygon.CoordinateImpl;
-import se.kodapan.geography.polygon.Envelope;
-import se.kodapan.geography.polygon.EnvelopeImpl;
+import se.kodapan.geography.domain.*;
+import se.kodapan.geography.domain.Coordinate;
+import se.kodapan.geography.domain.Envelope;
 
 import java.io.Serializable;
 
@@ -87,7 +85,7 @@ public class ResultImpl extends AbstractResult implements Serializable {
     if (bounds == null) {
       this.bounds = null;
     } else {
-      EnvelopeImpl envelope = new EnvelopeImpl(addressComponents.getFormattedAddress());
+      EnvelopeImpl envelope = new EnvelopeImpl();
       envelope.setNortheast(new CoordinateImpl(bounds.getNortheast()));
       envelope.setSouthwest(new CoordinateImpl(bounds.getSouthwest()));
       this.bounds = envelope;
@@ -104,7 +102,7 @@ public class ResultImpl extends AbstractResult implements Serializable {
     if (viewPort == null) {
       this.viewPort = null;
     } else {
-      EnvelopeImpl envelope = new EnvelopeImpl(addressComponents.getFormattedAddress());
+      EnvelopeImpl envelope = new EnvelopeImpl();
       envelope.setNortheast(new CoordinateImpl(viewPort.getNortheast()));
       envelope.setSouthwest(new CoordinateImpl(viewPort.getSouthwest()));
       this.viewPort = envelope;

@@ -13,31 +13,27 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package se.kodapan.geography.polygon;
+package se.kodapan.geography.domain;
 
 /**
  * @author kalle
- * @since 2010-jun-23 21:26:42
+ * @since 2010-jul-20 01:22:34
  */
-public class EnvelopeImpl extends CoordinatedEnvelope {
+public class DecoratedCoordinate extends CoordinateDecorator {
+
+  private Coordinate decoratedCoordinate;
 
   private static final long serialVersionUID = 1l;
-
-
-  private String polygonName;
-
-  public EnvelopeImpl() {
+  
+  public DecoratedCoordinate(Coordinate decoratedCoordinate) {
+    this.decoratedCoordinate = decoratedCoordinate;
   }
 
-  public EnvelopeImpl(String polygonName) {
-    this.polygonName = polygonName;
+  public Coordinate getDecoratedCoordinate() {
+    return decoratedCoordinate;
   }
 
-  public String getPolygonName() {
-    return polygonName;
-  }
-
-  public void setPolygonName(String polygonName) {
-    this.polygonName = polygonName;
+  public void setDecoratedCoordinate(Coordinate decoratedCoordinate) {
+    this.decoratedCoordinate = decoratedCoordinate;
   }
 }

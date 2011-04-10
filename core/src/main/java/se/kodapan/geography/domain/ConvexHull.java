@@ -13,27 +13,20 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package se.kodapan.geography.polygon;
+package se.kodapan.geography.domain;
+
+import java.io.Serializable;
+import java.util.Set;
 
 /**
  * @author kalle
- * @since 2010-jul-20 01:22:34
+ * @since 2010-sep-04 21:32:57
  */
-public class DecoratedCoordinate extends CoordinateDecorator {
-
-  private Coordinate decoratedCoordinate;
+public abstract class ConvexHull implements Serializable {
 
   private static final long serialVersionUID = 1l;
-  
-  public DecoratedCoordinate(Coordinate decoratedCoordinate) {
-    this.decoratedCoordinate = decoratedCoordinate;
-  }
 
-  public Coordinate getDecoratedCoordinate() {
-    return decoratedCoordinate;
-  }
+  public abstract Polygon factory(Set<Coordinate> coordinates);
 
-  public void setDecoratedCoordinate(Coordinate decoratedCoordinate) {
-    this.decoratedCoordinate = decoratedCoordinate;
-  }
+
 }

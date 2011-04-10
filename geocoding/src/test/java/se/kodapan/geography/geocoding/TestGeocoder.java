@@ -20,8 +20,8 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import se.kodapan.geography.domain.*;
 
-import se.kodapan.geography.polygon.CoordinateImpl;
-import se.kodapan.geography.polygon.PolygonTools;
+import se.kodapan.geography.domain.CoordinateImpl;
+import se.kodapan.geography.domain.PolygonTools;
 
 import java.io.File;
 

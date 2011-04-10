@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package se.kodapan.geography.polygon;
+package se.kodapan.geography.domain;
 
 /**
  * A polygon that actually only is a single coordinate point,
@@ -22,18 +22,19 @@ package se.kodapan.geography.polygon;
  * @author kalle
  * @since 2010-jun-24 15:00:41
  */
-public abstract class AbstractSingleCoordinatePolygon extends AbstractEnvelope implements SingleCoordinatePolygon {
+public class SingleCoordinatePolygonImpl extends AbstractEnvelope implements SingleCoordinatePolygon {
 
   private static final long serialVersionUID = 1l;
 
 
   private Coordinate coordinate;
 
-  protected AbstractSingleCoordinatePolygon(Coordinate coordinate) {
+
+  public SingleCoordinatePolygonImpl(Coordinate coordinate) {
     this.coordinate = coordinate;
   }
 
-  protected AbstractSingleCoordinatePolygon() {
+  public SingleCoordinatePolygonImpl() {
   }
 
   @Override
@@ -60,4 +61,6 @@ public abstract class AbstractSingleCoordinatePolygon extends AbstractEnvelope i
   public void setCoordinate(Coordinate coordinate) {
     this.coordinate = coordinate;
   }
+
+
 }

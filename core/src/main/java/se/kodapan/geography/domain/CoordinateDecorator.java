@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package se.kodapan.geography.polygon;
+package se.kodapan.geography.domain;
 
 /**
  * @author kalle
@@ -26,22 +26,22 @@ public abstract class CoordinateDecorator implements Coordinate {
   public abstract Coordinate getDecoratedCoordinate();
 
   @Override
-  public double getLatitude() {
+  public Double getLatitude() {
     return getDecoratedCoordinate().getLatitude();
   }
 
   @Override
-  public void setLatitude(double v) {
+  public void setLatitude(Double v) {
     getDecoratedCoordinate().setLatitude(v);
   }
 
   @Override
-  public double getLongitude() {
+  public Double getLongitude() {
     return getDecoratedCoordinate().getLongitude();
   }
 
   @Override
-  public void setLongitude(double v) {
+  public void setLongitude(Double v) {
     getDecoratedCoordinate().setLongitude(v);
   }
 

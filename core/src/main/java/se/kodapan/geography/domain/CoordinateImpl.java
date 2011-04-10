@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package se.kodapan.geography.polygon;
+package se.kodapan.geography.domain;
 
 import java.io.Externalizable;
 import java.io.IOException;
@@ -28,17 +28,17 @@ public class CoordinateImpl extends AbstractCoordinate implements Externalizable
 
   private static final long serialVersionUID = 1l;
 
-  private double latitude;
-  private double longitude;
+  private Double latitude;
+  private Double longitude;
 
   public CoordinateImpl() {
   }
 
   @Override
   public void writeExternal(ObjectOutput objectOutput) throws IOException {
-    objectOutput.writeInt(1);
-    objectOutput.writeDouble(latitude);
-    objectOutput.writeDouble(longitude);
+    objectOutput.writeInt(2);
+    objectOutput.writeObject(latitude);
+    objectOutput.writeObject(longitude);
   }
 
   @Override
@@ -47,6 +47,9 @@ public class CoordinateImpl extends AbstractCoordinate implements Externalizable
     if (version == 1) {
       latitude = objectInput.readDouble();
       longitude = objectInput.readDouble();
+    } else if (version == 2) {
+      latitude = (Double)objectInput.readObject();
+      longitude = (Double)objectInput.readObject();
     } else {
       throw new ClassNotFoundException("Unknown local version " + version + " of " + getClass().getName());
     }
@@ -56,56 +59,40 @@ public class CoordinateImpl extends AbstractCoordinate implements Externalizable
     this(coordinate.getLatitude(), coordinate.getLongitude());
   }
 
-  public CoordinateImpl(double latitude, double longitude) {
-    this.latitude = latitude;
-    this.longitude = longitude;
+  public CoordinateImpl(Number latitude, Number longitude) {
+    this(latitude.doubleValue(), longitude.doubleValue());
   }
 
-  public double getLatitude() {
+  public CoordinateImpl(Double latitude, Double longitude) {
+    setLatitude(latitude);
+    setLongitude(longitude);
+  }
+
+  public Double getLatitude() {
+    if (latitude == null) {
+      System.currentTimeMillis();
+    }
     return latitude;
   }
 
-  public void setLatitude(double latitude) {
+  public void setLatitude(Double latitude) {
+    if (latitude == null) {
+      System.currentTimeMillis();
+    }
     this.latitude = latitude;
   }
 
-  public double getLongitude() {
+  public Double getLongitude() {
     return longitude;
   }
 
-  public void setLongitude(double longitude) {
+  public void setLongitude(Double longitude) {
+    if (longitude == null) {
+      System.currentTimeMillis();
+    }
+
     this.longitude = longitude;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || !Coordinate.class.isAssignableFrom(o.getClass())) return false;
 
-    Coordinate that = (Coordinate) o;
-
-    if (Double.compare(that.getLatitude(), latitude) != 0) return false;
-    if (Double.compare(that.getLongitude(), longitude) != 0) return false;
-
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    int result;
-    long temp;
-    temp = latitude != +0.0d ? Double.doubleToLongBits(latitude) : 0L;
-    result = (int) (temp ^ (temp >>> 32));
-    temp = longitude != +0.0d ? Double.doubleToLongBits(longitude) : 0L;
-    result = 31 * result + (int) (temp ^ (temp >>> 32));
-    return result;
-  }
-
-  @Override
-  public String toString() {
-    return "CoordinateImpl{" +
-        "latitude=" + latitude +
-        ", longitude=" + longitude +
-        '}';
-  }
 }

@@ -16,7 +16,7 @@
 package se.kodapan.geography.geocoding;
 
 
-import se.kodapan.geography.polygon.Polygon;
+import se.kodapan.geography.domain.Polygon;
 
 import java.io.Serializable;
 

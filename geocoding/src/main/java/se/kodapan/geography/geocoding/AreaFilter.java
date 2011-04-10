@@ -15,8 +15,8 @@
  */
 package se.kodapan.geography.geocoding;
 
-import se.kodapan.geography.polygon.Coordinate;
-import se.kodapan.geography.polygon.Polygon;
+import se.kodapan.geography.domain.Coordinate;
+import se.kodapan.geography.domain.Polygon;
 
 import java.util.Arrays;
 import java.util.HashSet;

@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package se.kodapan.geography.polygon;
+package se.kodapan.geography.domain;
 
 /**
  * An envelope that holds two CoordinateImpls, one for southwest and one for northeast.
@@ -21,13 +21,21 @@ package se.kodapan.geography.polygon;
  * @author kalle
  * @since 2010-jun-23 19:38:46
  */
-public abstract class CoordinatedEnvelope extends AbstractEnvelope {
+public class EnvelopeImpl extends AbstractEnvelope {
 
   private static final long serialVersionUID = 1l;
 
 
   private Coordinate southwest;
   private Coordinate northeast;
+
+  public EnvelopeImpl() {
+  }
+
+  public EnvelopeImpl(Coordinate southwest, Coordinate northeast) {
+    this.southwest = southwest;
+    this.northeast = northeast;
+  }
 
   @Override
   protected void coordinateFactory() {
@@ -50,4 +58,5 @@ public abstract class CoordinatedEnvelope extends AbstractEnvelope {
   public void setNortheast(Coordinate northeast) {
     this.northeast = northeast;
   }
+
 }

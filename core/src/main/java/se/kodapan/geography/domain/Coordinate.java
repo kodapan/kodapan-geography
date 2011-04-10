@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package se.kodapan.geography.polygon;
+package se.kodapan.geography.domain;
 
 import java.io.Serializable;
 import java.util.Random;
@@ -24,11 +24,11 @@ import java.util.Random;
  */
 public interface Coordinate extends Serializable {
 
-  public abstract double getLatitude();
-  public abstract void setLatitude(double latitude);
+  public abstract Double getLatitude();
+  public abstract void setLatitude(Double latitude);
 
-  public abstract double getLongitude();
-  public abstract void setLongitude(double longitude);
+  public abstract Double getLongitude();
+  public abstract void setLongitude(Double longitude);
 
   /// todo
 //  public abstract String getName();

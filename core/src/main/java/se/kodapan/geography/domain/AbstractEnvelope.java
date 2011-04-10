@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package se.kodapan.geography.polygon;
+package se.kodapan.geography.domain;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -121,12 +121,12 @@ public abstract class AbstractEnvelope
       // todo these should be transient
 
       EnvelopeImpl asianSide = new EnvelopeImpl();
-      asianSide.setNortheast(new CoordinateImpl(getNortheast().getLatitude(), 180));
+      asianSide.setNortheast(new CoordinateImpl(getNortheast().getLatitude(), 180d));
       asianSide.setSouthwest(new CoordinateImpl(getSouthwest().getLatitude(), getSouthwest().getLongitude()));
 
       EnvelopeImpl americanSide = new EnvelopeImpl();
       asianSide.setNortheast(new CoordinateImpl(getNortheast().getLatitude(), getNortheast().getLongitude()));
-      asianSide.setSouthwest(new CoordinateImpl(getSouthwest().getLatitude(), -180));
+      asianSide.setSouthwest(new CoordinateImpl(getSouthwest().getLatitude(), -180d));
 
       return asianSide.contains(coordinate) || americanSide.contains(coordinate);
 
@@ -139,106 +139,128 @@ public abstract class AbstractEnvelope
     }
   }
 
-  private final AbstractCoordinate centroid = new AbstractCoordinate() {
-
-    private static final long serialVersionUID = 1l;
-
-    @Override
-    public double getLatitude() {
-      return (getSouthwest().getLatitude() + getNortheast().getLatitude()) / 2d;
-
-    }
-
-    @Override
-    public double getLongitude() {
-      return (getSouthwest().getLongitude() + getNortheast().getLongitude()) / 2d;
-    }
-
-    @Override
-    public void setLatitude(double latitude) {
-      throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setLongitude(double longitude) {
-      throw new UnsupportedOperationException();
-    }
-
-  };
-
-
-  private final AbstractCoordinate southeast = new AbstractCoordinate() {
-
-    private static final long serialVersionUID = 1l;
-
-    @Override
-    public double getLatitude() {
-      return getSouthwest().getLatitude();
-
-    }
-
-    @Override
-    public double getLongitude() {
-      return getNortheast().getLongitude();
-    }
-
-    @Override
-    public void setLatitude(double latitude) {
-      getSouthwest().setLatitude(latitude);
-    }
-
-    @Override
-    public void setLongitude(double longitude) {
-      getNortheast().setLatitude(longitude);
-    }
-
-  };
-
-
-  private final AbstractCoordinate northwest = new AbstractCoordinate() {
-
-    private static final long serialVersionUID = 1l;
-
-    @Override
-    public double getLatitude() {
-      return getNortheast().getLatitude();
-
-    }
-
-    @Override
-    public double getLongitude() {
-      return getSouthwest().getLongitude();
-    }
-
-    @Override
-    public void setLatitude(double latitude) {
-      getNortheast().setLatitude(latitude);
-    }
-
-    @Override
-    public void setLongitude(double longitude) {
-      getSouthwest().setLongitude(longitude);
-    }
-
-  };
 
   @Override
   public Coordinate getSoutheast() {
-    return southeast;
+    return new AbstractCoordinate() {
+
+      private static final long serialVersionUID = 1l;
+
+      @Override
+      public Double getLatitude() {
+        return getSouthwest().getLatitude();
+
+      }
+
+      @Override
+      public Double getLongitude() {
+        return getNortheast().getLongitude();
+      }
+
+      @Override
+      public void setLatitude(Double latitude) {
+        getSouthwest().setLatitude(latitude);
+      }
+
+      @Override
+      public void setLongitude(Double longitude) {
+        getNortheast().setLatitude(longitude);
+      }
+
+    };
   }
 
   @Override
   public AbstractCoordinate getNorthwest() {
-    return northwest;
+    return new AbstractCoordinate() {
+
+      private static final long serialVersionUID = 1l;
+
+      @Override
+      public Double getLatitude() {
+        return getNortheast().getLatitude();
+
+      }
+
+      @Override
+      public Double getLongitude() {
+        return getSouthwest().getLongitude();
+      }
+
+      @Override
+      public void setLatitude(Double latitude) {
+        getNortheast().setLatitude(latitude);
+      }
+
+      @Override
+      public void setLongitude(Double longitude) {
+        getSouthwest().setLongitude(longitude);
+      }
+
+    };
   }
 
   @Override
   public final AbstractCoordinate getCentroid() {
-    return centroid;
+    return new AbstractCoordinate() {
+
+      private static final long serialVersionUID = 1l;
+
+      @Override
+      public Double getLatitude() {
+        return (getSouthwest().getLatitude() + getNortheast().getLatitude()) / 2d;
+
+      }
+
+      @Override
+      public Double getLongitude() {
+        return (getSouthwest().getLongitude() + getNortheast().getLongitude()) / 2d;
+      }
+
+      @Override
+      public void setLatitude(Double latitude) {
+        throw new UnsupportedOperationException();
+      }
+
+      @Override
+      public void setLongitude(Double longitude) {
+        throw new UnsupportedOperationException();
+      }
+
+    };
+
   }
 
   @Override
   public double archDistanceDiagonal() {
     return getSouthwest().archDistance(getNortheast());
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || Envelope.class.isAssignableFrom(o.getClass())) return false;
+
+    Envelope envelope = (Envelope) o;
+
+    if (getNortheast() != null ? !getNortheast().equals(envelope.getNortheast()) : envelope.getNortheast() != null) return false;
+    if (getSouthwest() != null ? !getSouthwest().equals(envelope.getSouthwest()) : envelope.getSouthwest() != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = getSouthwest() != null ? getSouthwest().hashCode() : 0;
+    result = 31 * result + (getNortheast() != null ? getNortheast().hashCode() : 0);
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return getClass().getSimpleName() + "{" +
+        "southwest=" + getSouthwest() +
+        ", northeast=" + getNortheast() +
+        '}';
   }
 }

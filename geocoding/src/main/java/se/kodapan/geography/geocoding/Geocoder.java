@@ -17,8 +17,8 @@ package se.kodapan.geography.geocoding;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.kodapan.geography.polygon.Coordinate;
-import se.kodapan.geography.polygon.Polygon;
+import se.kodapan.geography.domain.Coordinate;
+import se.kodapan.geography.domain.Polygon;
 
 /**
  * @author kalle

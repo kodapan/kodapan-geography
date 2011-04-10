@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package se.kodapan.geography.polygon;
+package se.kodapan.geography.domain;
 
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +24,8 @@ import java.util.List;
  */
 public class PolygonImpl extends AbstractPolygon {
 
+  private static final long serialVersionUID = 1l;
+
   private List<Coordinate> coordinates;
 
   public PolygonImpl() {
@@ -31,11 +33,6 @@ public class PolygonImpl extends AbstractPolygon {
 
   public PolygonImpl(List<Coordinate> coordinates) {
     this.coordinates = coordinates;
-  }
-
-  @Override
-  public String getPolygonName() {
-    return null;
   }
 
   @Override

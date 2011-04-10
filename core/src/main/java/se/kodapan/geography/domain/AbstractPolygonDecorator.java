@@ -13,68 +13,52 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package se.kodapan.geography.polygon;
+package se.kodapan.geography.domain;
 
 import java.util.Iterator;
 
 /**
  * @author kalle
- * @since 2010-jun-25 23:35:55
+ * @since 2010-jun-23 19:50:50
  */
-public class PolygonDecorator implements Polygon {
+public abstract class AbstractPolygonDecorator implements Polygon {
 
   private static final long serialVersionUID = 1l;
 
 
-  private Polygon decorated;
-
-  public PolygonDecorator() {
-  }
-
-  public PolygonDecorator(Polygon decorated) {
-    this.decorated = decorated;
-  }
-
-  public Polygon getDecorated() {
-    return decorated;
-  }
-
-  public void setDecorated(Polygon decorated) {
-    this.decorated = decorated;
-  }
-
   @Override
-  public String getPolygonName() {
-    return getDecorated().getPolygonName();
+  public double archDistance(Coordinate that) {
+    return getDecoratedPolygon().archDistance(that);
   }
 
   @Override
   public Iterator<Coordinate> iterateCoordinates() {
-    return getDecorated().iterateCoordinates();
+    return getDecoratedPolygon().iterateCoordinates();
   }
 
   @Override
   public boolean contains(Coordinate coordinate) {
-    return getDecorated().contains(coordinate);
+    return getDecoratedPolygon().contains(coordinate);
   }
 
   @Override
-  public boolean contains(Polygon polygon) {
-    return getDecorated().contains(polygon);
+  public boolean contains(Polygon that) {
+    return getDecoratedPolygon().contains(that);
   }
 
   @Override
   public Coordinate getCentroid() {
-    return getDecorated().getCentroid();
+    return getDecoratedPolygon().getCentroid();
   }
 
   @Override
   public double archDistance(Polygon that) {
-    return getDecorated().archDistance(that);
+    return getDecoratedPolygon().archDistance(that);
   }
 
-  @Override
-  public double archDistance(Coordinate that) {
-    return getDecorated().archDistance(that);
-  }
+  public abstract Polygon getDecoratedPolygon();
+
+
+
+
 }

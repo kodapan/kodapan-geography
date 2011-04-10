@@ -15,9 +15,7 @@
  */
 package se.kodapan.geography.geocoding;
 
-import se.kodapan.geography.domain.AddressComponent;
-import se.kodapan.geography.domain.AddressComponents;
-import se.kodapan.geography.polygon.*;
+import se.kodapan.geography.domain.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -138,22 +136,22 @@ public class Geocoding extends AbstractPolygonDecorator implements Result, Coord
 
 
   @Override
-  public double getLatitude() {
+  public Double getLatitude() {
     return getDecoratedPolygon().getCentroid().getLatitude();
   }
 
   @Override
-  public void setLatitude(double latitude) {
+  public void setLatitude(Double latitude) {
     getDecoratedPolygon().getCentroid().setLatitude(latitude);
   }
 
   @Override
-  public double getLongitude() {
+  public Double getLongitude() {
     return getDecoratedPolygon().getCentroid().getLongitude();
   }
 
   @Override
-  public void setLongitude(double longitude) {
+  public void setLongitude(Double longitude) {
     getDecoratedPolygon().getCentroid().setLongitude(longitude);
   }
 
@@ -162,12 +160,7 @@ public class Geocoding extends AbstractPolygonDecorator implements Result, Coord
     return getDecoratedResult().accept(new ResultVisitor<Polygon>() {
       @Override
       public Polygon visit(Coordinate location) {
-        return new AbstractSingleCoordinatePolygon(location) {
-          @Override
-          public String getPolygonName() {
-            return getDecoratedResult().getAddressComponents().getFormattedAddress();
-          }
-        };
+        return new SingleCoordinatePolygonImpl(location);
       }
 
       @Override
@@ -175,15 +168,6 @@ public class Geocoding extends AbstractPolygonDecorator implements Result, Coord
         return bounds;
       }
     });
-  }
-
-  @Override
-  public String getPolygonName() {
-    if (isSuccess()) {
-      return results.get(0).getAddressComponents().getFormattedAddress();
-    } else {
-      return "Unsuccessful unique geocoding";
-    }
   }
 
   @Override

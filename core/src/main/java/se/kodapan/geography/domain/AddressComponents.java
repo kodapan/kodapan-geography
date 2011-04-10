@@ -321,6 +321,28 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
   }
 
   @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    if (!super.equals(o)) return false;
+
+    AddressComponents that = (AddressComponents) o;
+
+    if (formattedAddress != null ? !formattedAddress.equals(that.formattedAddress) : that.formattedAddress != null) return false;
+    if (typeIndex != null ? !typeIndex.equals(that.typeIndex) : that.typeIndex != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = super.hashCode();
+    result = 31 * result + (typeIndex != null ? typeIndex.hashCode() : 0);
+    result = 31 * result + (formattedAddress != null ? formattedAddress.hashCode() : 0);
+    return result;
+  }
+
+  @Override
   public String toString() {
     return "AddressComponents{" +
         "formattedAddress='" + formattedAddress + '\'' +

@@ -13,55 +13,63 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package se.kodapan.geography.polygon;
+package se.kodapan.geography.domain;
 
 import java.util.Iterator;
 
 /**
  * @author kalle
- * @since 2010-jun-23 19:50:50
+ * @since 2010-jun-25 23:35:55
  */
-public abstract class AbstractPolygonDecorator implements Polygon {
+public class PolygonDecorator implements Polygon {
 
   private static final long serialVersionUID = 1l;
 
 
-  @Override
-  public double archDistance(Coordinate that) {
-    return getDecoratedPolygon().archDistance(that);
+  private Polygon decorated;
+
+  public PolygonDecorator() {
   }
 
-  @Override
-  public String getPolygonName() {
-    return getDecoratedPolygon().getPolygonName();
+  public PolygonDecorator(Polygon decorated) {
+    this.decorated = decorated;
+  }
+
+  public Polygon getDecorated() {
+    return decorated;
+  }
+
+  public void setDecorated(Polygon decorated) {
+    this.decorated = decorated;
   }
 
   @Override
   public Iterator<Coordinate> iterateCoordinates() {
-    return getDecoratedPolygon().iterateCoordinates();
+    return getDecorated().iterateCoordinates();
   }
 
   @Override
   public boolean contains(Coordinate coordinate) {
-    return getDecoratedPolygon().contains(coordinate);
+    return getDecorated().contains(coordinate);
   }
 
   @Override
-  public boolean contains(Polygon that) {
-    return getDecoratedPolygon().contains(that);
+  public boolean contains(Polygon polygon) {
+    return getDecorated().contains(polygon);
   }
 
   @Override
   public Coordinate getCentroid() {
-    return getDecoratedPolygon().getCentroid();
+    return getDecorated().getCentroid();
   }
 
   @Override
   public double archDistance(Polygon that) {
-    return getDecoratedPolygon().archDistance(that);
+    return getDecorated().archDistance(that);
   }
 
-  public abstract Polygon getDecoratedPolygon();
-
-
+  @Override
+  public double archDistance(Coordinate that) {
+    return getDecorated().archDistance(that);
+  }
 }

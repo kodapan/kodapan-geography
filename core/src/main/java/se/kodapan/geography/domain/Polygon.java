@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package se.kodapan.geography.polygon;
+package se.kodapan.geography.domain;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -24,7 +24,9 @@ import java.util.Iterator;
  */
 public interface Polygon extends Serializable {
 
-  public String getPolygonName();
+//  private static final long serialVersionUID = 1l;
+
+//  public String getPolygonName();
 
   /**
    * for now only used to draw polygons, not yet for functionality.

@@ -20,8 +20,7 @@ import com.google.maps.geocoding.AddressComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import se.kodapan.geography.polygon.*;
-import se.kodapan.geography.polygon.Envelope;
+import se.kodapan.geography.domain.*;
 
 import java.io.IOException;
 
@@ -131,22 +130,12 @@ public class GoogleGeocoder extends Geocoder {
       }
 
       if (googleResult.getGeometry().getBounds() != null) {
-        Envelope envelope = new CoordinatedEnvelope(){
-          @Override
-          public String getPolygonName() {
-            return result.getAddressComponents().getFormattedAddress();
-          }
-        };
+        se.kodapan.geography.domain.Envelope envelope = new EnvelopeImpl();
         envelope.addBounds(googleResult.getGeometry().getBounds().getNortheast().getLat(), googleResult.getGeometry().getBounds().getNortheast().getLng());
         envelope.addBounds(googleResult.getGeometry().getBounds().getSouthwest().getLat(), googleResult.getGeometry().getBounds().getSouthwest().getLng());
         result.setBounds(envelope);
       } else {
-        result.setBounds(new AbstractSingleCoordinatePolygon(result.getLocation()){
-          @Override
-          public String getPolygonName() {
-            return result.getAddressComponents().getFormattedAddress();
-          }
-        });
+        result.setBounds(new SingleCoordinatePolygonImpl(result.getLocation()));
       }
 
       if (googleResult.getGeometry().getViewport() != null) {
