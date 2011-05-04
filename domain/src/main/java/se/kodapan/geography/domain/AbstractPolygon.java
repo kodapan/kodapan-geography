@@ -25,10 +25,12 @@ public abstract class AbstractPolygon implements Polygon {
 
   private static final long serialVersionUID = 1l;
 
+
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (o == null || !(o instanceof Polygon)) return false;
 
     Polygon polygon = (Polygon) o;
 
@@ -71,7 +73,7 @@ public abstract class AbstractPolygon implements Polygon {
   public String toString() {
     Iterator<Coordinate> it = iterateCoordinates();
     StringBuilder sb = new StringBuilder(it == null ? 50 : 1000);
-    sb.append(getClass().getSimpleName()).append("{coordinates=");
+    sb.append("Polygon{coordinates=");
     if (it == null) {
       sb.append("null");
     } else {

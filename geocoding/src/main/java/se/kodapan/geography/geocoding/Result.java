@@ -18,6 +18,7 @@ package se.kodapan.geography.geocoding;
 import se.kodapan.geography.domain.Coordinate;
 import se.kodapan.geography.domain.Envelope;
 import se.kodapan.geography.domain.AddressComponents;
+import se.kodapan.geography.domain.Precision;
 
 import java.io.Serializable;
 import java.util.*;

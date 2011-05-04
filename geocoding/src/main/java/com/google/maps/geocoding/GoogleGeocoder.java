@@ -23,7 +23,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLFilterImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
-import se.kodapan.collections.MapSet;
+import se.kodapan.collections.SetMap;
 import se.kodapan.io.http.HttpGetReader;
 import se.kodapan.lang.Time;
 
@@ -326,8 +326,8 @@ public class GoogleGeocoder {
   }
 
 
-  public static MapSet<String, AddressComponent> getAddressComponentsByType(Result result) {
-    MapSet<String, AddressComponent> ret = new MapSet<String, AddressComponent>();
+  public static SetMap<String, AddressComponent> getAddressComponentsByType(Result result) {
+    SetMap<String, AddressComponent> ret = new SetMap<String, AddressComponent>();
     for (AddressComponent addressComponent : result.getAddressComponents()) {
       for (String type : addressComponent.getTypes()) {
         ret.add(type, addressComponent);

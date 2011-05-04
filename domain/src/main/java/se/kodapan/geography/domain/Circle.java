@@ -59,7 +59,8 @@ public class Circle extends AbstractPolygon {
     double radiusLongitude = radiusLatitude / Math.cos(centroid.getLatitude() * (Math.PI / 180));
 
     int step = (int)(360d / (double)circumferenceResolution);
-    for (int i = 0; i <= 361; i+= step) {
+//    for (int i = 0; i <= 361; i+= step) {
+    for (int i = 0; i < 360; i+= step) {
       double a = i * (Math.PI / 180);
       double latitude = centroid.getLatitude() + (radiusLatitude * Math.sin(a));
       double longitude = centroid.getLongitude() + (radiusLongitude * Math.cos(a));

@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package se.kodapan.geography.geocoding;
+package se.kodapan.geography.domain;
 
 import java.io.*;
 
@@ -21,7 +21,7 @@ import java.io.*;
  * @author kalle
  * @since 2010-jun-24 14:26:57
  */
-public enum Precision implements Serializable {
+public enum Precision {
 
   // from google
 

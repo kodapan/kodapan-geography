@@ -8,9 +8,9 @@
     <artifactId>geography-parent</artifactId>
     <version>0.2.1-SNAPSHOT</version>
   </parent>
-  <groupId>${project.parent.groupId}</groupId>
+  <groupId>se.kodapan.geography</groupId>
   <artifactId>geocoding</artifactId>
-  <version>${project.parent.version}</version>
+  <version>0.2.1-SNAPSHOT</version>
 
   <packaging>jar</packaging>
 
@@ -18,14 +18,14 @@
     <dependency>
       <groupId>${project.parent.groupId}</groupId>
       <artifactId>core</artifactId>
-      <version>${project.parent.version}</version>
+      <version>0.2.1-SNAPSHOT</version>
     </dependency>
 
 
     <dependency>
       <groupId>se.kodapan.common</groupId>
       <artifactId>misc</artifactId>
-      <version>0.2-SNAPSHOT</version>
+      <version>0.2.2-SNAPSHOT</version>
     </dependency>
 
     <dependency>

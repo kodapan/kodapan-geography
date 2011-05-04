@@ -111,7 +111,7 @@ public class MergeSameHouseResultsFilter extends ResponseFilter {
           newResult.getAddressComponents().remove(routes.get(i));
         }
 
-        newResult.getAddressComponents().setFormattedAddress(locale);
+        newResult.getAddressComponents().setFormattedAddress(locale.getLanguage(), locale.getCountry());
         newResult.setPrecision(Precision.APPROXIMATE);
 
         if (index > geocoding.getResults().size() - 1) {

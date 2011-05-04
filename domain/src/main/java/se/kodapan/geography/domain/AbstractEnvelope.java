@@ -15,6 +15,7 @@
  */
 package se.kodapan.geography.domain;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -74,42 +75,7 @@ public abstract class AbstractEnvelope
 
   @Override
   public Iterator<Coordinate> iterateCoordinates() {
-    return new Iterator<Coordinate>() {
-      int state = 0;
-
-      @Override
-      public boolean hasNext() {
-        return state < 4;
-      }
-
-      @Override
-      public Coordinate next() {
-        Coordinate coordinate;
-        switch (state) {
-          case 0:
-            coordinate = getNortheast();
-            break;
-          case 1:
-            coordinate = getNorthwest();
-            break;
-          case 2:
-            coordinate = getSouthwest();
-            break;
-          case 3:
-            coordinate = getSoutheast();
-            break;
-          default:
-            throw new NoSuchElementException();
-        }
-        state++;
-        return coordinate;
-      }
-
-      @Override
-      public void remove() {
-        throw new UnsupportedOperationException();
-      }
-    };
+    return new CoordinateIterator();
   }
 
   @Override
@@ -142,93 +108,17 @@ public abstract class AbstractEnvelope
 
   @Override
   public Coordinate getSoutheast() {
-    return new AbstractCoordinate() {
-
-      private static final long serialVersionUID = 1l;
-
-      @Override
-      public Double getLatitude() {
-        return getSouthwest().getLatitude();
-
-      }
-
-      @Override
-      public Double getLongitude() {
-        return getNortheast().getLongitude();
-      }
-
-      @Override
-      public void setLatitude(Double latitude) {
-        getSouthwest().setLatitude(latitude);
-      }
-
-      @Override
-      public void setLongitude(Double longitude) {
-        getNortheast().setLatitude(longitude);
-      }
-
-    };
+    return new Southeast();
   }
 
   @Override
   public AbstractCoordinate getNorthwest() {
-    return new AbstractCoordinate() {
-
-      private static final long serialVersionUID = 1l;
-
-      @Override
-      public Double getLatitude() {
-        return getNortheast().getLatitude();
-
-      }
-
-      @Override
-      public Double getLongitude() {
-        return getSouthwest().getLongitude();
-      }
-
-      @Override
-      public void setLatitude(Double latitude) {
-        getNortheast().setLatitude(latitude);
-      }
-
-      @Override
-      public void setLongitude(Double longitude) {
-        getSouthwest().setLongitude(longitude);
-      }
-
-    };
+    return new Northwest();
   }
 
   @Override
   public final AbstractCoordinate getCentroid() {
-    return new AbstractCoordinate() {
-
-      private static final long serialVersionUID = 1l;
-
-      @Override
-      public Double getLatitude() {
-        return (getSouthwest().getLatitude() + getNortheast().getLatitude()) / 2d;
-
-      }
-
-      @Override
-      public Double getLongitude() {
-        return (getSouthwest().getLongitude() + getNortheast().getLongitude()) / 2d;
-      }
-
-      @Override
-      public void setLatitude(Double latitude) {
-        throw new UnsupportedOperationException();
-      }
-
-      @Override
-      public void setLongitude(Double longitude) {
-        throw new UnsupportedOperationException();
-      }
-
-    };
-
+    return new Centroid(this);
   }
 
   @Override
@@ -239,7 +129,7 @@ public abstract class AbstractEnvelope
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (o == null || Envelope.class.isAssignableFrom(o.getClass())) return false;
+    if (o == null || !(o instanceof Envelope)) return false;
 
     Envelope envelope = (Envelope) o;
 
@@ -258,9 +148,148 @@ public abstract class AbstractEnvelope
 
   @Override
   public String toString() {
-    return getClass().getSimpleName() + "{" +
+    return "Envelope{" +
         "southwest=" + getSouthwest() +
         ", northeast=" + getNortheast() +
         '}';
   }
+
+
+  public class CoordinateIterator implements Iterator<Coordinate>, Serializable {
+
+    private static final long serialVersionUID = 1l;
+
+    private int state = 0;
+
+    @Override
+    public boolean hasNext() {
+      return state < 4;
+    }
+
+    @Override
+    public Coordinate next() {
+      Coordinate coordinate;
+      switch (state) {
+        case 0:
+          coordinate = getNortheast();
+          break;
+        case 1:
+          coordinate = getNorthwest();
+          break;
+        case 2:
+          coordinate = getSouthwest();
+          break;
+        case 3:
+          coordinate = getSoutheast();
+          break;
+        default:
+          throw new NoSuchElementException();
+      }
+      state++;
+      return coordinate;
+    }
+
+    @Override
+    public void remove() {
+      throw new UnsupportedOperationException();
+    }
+  }
+
+  public static class Centroid extends AbstractCoordinate {
+
+    private static final long serialVersionUID = 1l;
+
+    private Envelope envelope;
+
+    public Centroid() {
+    }
+
+    public Centroid(Envelope envelope) {
+      this.envelope = envelope;
+    }
+
+    @Override
+    public Double getLatitude() {
+      return (envelope.getSouthwest().getLatitude() + envelope.getNortheast().getLatitude()) / 2d;
+
+    }
+
+    @Override
+    public Double getLongitude() {
+      return (envelope.getSouthwest().getLongitude() + envelope.getNortheast().getLongitude()) / 2d;
+    }
+
+    @Override
+    public void setLatitude(Double latitude) {
+      throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void setLongitude(Double longitude) {
+      throw new UnsupportedOperationException();
+    }
+
+    public Envelope getEnvelope() {
+      return envelope;
+    }
+
+    public void setEnvelope(Envelope envelope) {
+      this.envelope = envelope;
+    }
+  }
+
+  public class Southeast extends AbstractCoordinate {
+
+    private static final long serialVersionUID = 1l;
+
+    @Override
+    public Double getLatitude() {
+      return getSouthwest().getLatitude();
+
+    }
+
+    @Override
+    public Double getLongitude() {
+      return getNortheast().getLongitude();
+    }
+
+    @Override
+    public void setLatitude(Double latitude) {
+      getSouthwest().setLatitude(latitude);
+    }
+
+    @Override
+    public void setLongitude(Double longitude) {
+      getNortheast().setLatitude(longitude);
+    }
+
+  }
+
+  public class Northwest extends AbstractCoordinate {
+
+    private static final long serialVersionUID = 1l;
+
+    @Override
+    public Double getLatitude() {
+      return getNortheast().getLatitude();
+
+    }
+
+    @Override
+    public Double getLongitude() {
+      return getSouthwest().getLongitude();
+    }
+
+    @Override
+    public void setLatitude(Double latitude) {
+      getNortheast().setLatitude(latitude);
+    }
+
+    @Override
+    public void setLongitude(Double longitude) {
+      getSouthwest().setLongitude(longitude);
+    }
+
+  }
+
 }

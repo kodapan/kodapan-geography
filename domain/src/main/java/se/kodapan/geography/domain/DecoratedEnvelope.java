@@ -23,6 +23,9 @@ public class DecoratedEnvelope extends EnvelopeDecorator {
 
   private static final long serialVersionUID = 1l;
 
+  public DecoratedEnvelope() {
+  }
+
   private Envelope decoratedEnvelope;
 
   public DecoratedEnvelope(Envelope decoratedEnvelope) {

@@ -15,7 +15,7 @@
  */
 package se.kodapan.geography.domain;
 
-import se.kodapan.collections.MapSet;
+import se.kodapan.collections.SetMap;
 
 import java.io.Serializable;
 import java.util.*;
@@ -28,7 +28,7 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
 
   private static final long serialVersionUID = 1l;
 
-  private MapSet<String, AddressComponent> typeIndex = new MapSet<String, AddressComponent>();
+  private SetMap<String, AddressComponent> typeIndex = new SetMap<String, AddressComponent>();
   private String formattedAddress;
 
   public AddressComponents() {
@@ -41,7 +41,7 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
   }
 
   public void reconstructIndex() {
-    MapSet<String, AddressComponent> typeIndex = new MapSet<String, AddressComponent>();
+    SetMap<String, AddressComponent> typeIndex = new SetMap<String, AddressComponent>();
     for (AddressComponent component : this) {
       for (String type : component.getTypes()) {
         typeIndex.add(type, component);
@@ -211,14 +211,14 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
     return list;
   }
 
-  public void setFormattedAddress(Locale locale) {
+  public void setFormattedAddress(String localeLanguage, String localeCountry) {
     StringBuilder sb = new StringBuilder();
 
     AddressComponent route = get("route");
 
     AddressComponent streetNumber = get("street_number");
     if (streetNumber != null) {
-      if (locale.getLanguage().equals("en")) {
+      if ("en".equals(localeLanguage)) {
 
         sb.append(streetNumber.getLongName());
         sb.append(" ");
@@ -304,11 +304,11 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
   }
 
 
-  public MapSet<String, AddressComponent> getTypeIndex() {
+  public SetMap<String, AddressComponent> getTypeIndex() {
     return typeIndex;
   }
 
-  public void setTypeIndex(MapSet<String, AddressComponent> typeIndex) {
+  public void setTypeIndex(SetMap<String, AddressComponent> typeIndex) {
     this.typeIndex = typeIndex;
   }
 

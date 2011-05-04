@@ -29,7 +29,7 @@ public abstract class AbstractCoordinate implements Coordinate {
 
   @Override
   public String toString() {
-    return getClass().getSimpleName() + "{" +
+    return getClass().toString() + "{" +
         "latitude=" + getLatitude() +
         ", longitude=" + getLongitude() +
         '}';
@@ -38,7 +38,7 @@ public abstract class AbstractCoordinate implements Coordinate {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (o == null || Coordinate.class.isAssignableFrom(o.getClass())) return false;
+    if (o == null || !(o instanceof Coordinate)) return false;
     if (!super.equals(o)) return false;
 
     Coordinate that = (Coordinate) o;
