@@ -112,7 +112,7 @@ public class TestGeocoder extends TestCase {
 
     // test bounds
 
-    Geocoding opgs = geocoder.geocode("Olof palmes gatan 23", stockholm);
+    Geocoding opgs = geocoder.geocode("Olof palmes gata 23", stockholm);
     assertFalse(opgs.isSuccess());
     opgs = new MergeSameHouseResultsFilter(opgs).filter();    
     new ProximityScorer(stockholm).score(opgs);
@@ -134,7 +134,7 @@ public class TestGeocoder extends TestCase {
     assertFalse(opg.isSuccess());
 
 
-    opg = geocoder.geocode("Olof palmes gatan 23");
+    opg = geocoder.geocode("Olof palmes gata, sverige");
     opg = new MergeSameHouseResultsFilter(opg).filter();        
     new ProximityScorer(stockholm).score(opg);
     new ThreadsholdScorer().score(opg);
