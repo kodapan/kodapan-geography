@@ -41,7 +41,7 @@ public enum AddressComponentType implements Serializable {
    */
   political,
   /**
-   * indicates the national political entity, and is typically the highest order type returned by the Geocoder.
+   * indicates the national political entity, and is typically the highest order type returned by the Nominatim.
    */
   country,
   /**

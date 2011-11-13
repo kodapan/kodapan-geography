@@ -16,6 +16,7 @@
 package se.kodapan.geography.domain;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -41,6 +42,11 @@ public abstract class AbstractEnvelope
     }
   }
 
+  public final void addBounds(Iterable<Coordinate> coordinates) {
+    for (Coordinate coordinate : coordinates) {
+      addBounds(coordinate.getLatitude(), coordinate.getLongitude());
+    }
+  }
   public final void addBounds(Coordinate... coordinates) {
     for (Coordinate coordinate : coordinates) {
       addBounds(coordinate.getLatitude(), coordinate.getLongitude());

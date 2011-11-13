@@ -71,5 +71,12 @@ public interface Result extends Serializable {
 
   public abstract void setAddressComponents(AddressComponents addressComponents);
 
+  public abstract String getLicence();
+
+  public abstract void setLicence(String licence);
+
+  public abstract String getSource();
+
+  public abstract void setSource(String source);
 
 }

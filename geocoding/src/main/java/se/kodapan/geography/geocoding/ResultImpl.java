@@ -55,24 +55,64 @@ public class ResultImpl extends AbstractResult implements Serializable {
   private Coordinate location;
   private Precision precision;
 
+  private String source;
+  private String licence;
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (o == null || !Result.class.isAssignableFrom(o.getClass())) return false;
+    if (o == null || getClass() != o.getClass()) return false;
 
-    Result result = (Result) o;
+    ResultImpl result = (ResultImpl) o;
 
-    String formattedAddress = addressComponents != null ? addressComponents.getFormattedAddress() : null;
-    String formattedAddress2 = result.getAddressComponents() != null ? result.getAddressComponents().getFormattedAddress() : null;
-    return !(formattedAddress != null ? !formattedAddress.equalsIgnoreCase(formattedAddress2) : formattedAddress2 != null);
+    if (Double.compare(result.score, score) != 0) return false;
+    if (addressComponents != null ? !addressComponents.equals(result.addressComponents) : result.addressComponents != null)
+      return false;
+    if (bounds != null ? !bounds.equals(result.bounds) : result.bounds != null)
+      return false;
+    if (licence != null ? !licence.equals(result.licence) : result.licence != null)
+      return false;
+    if (location != null ? !location.equals(result.location) : result.location != null)
+      return false;
+    if (precision != result.precision) return false;
+    if (source != null ? !source.equals(result.source) : result.source != null)
+      return false;
+    if (viewPort != null ? !viewPort.equals(result.viewPort) : result.viewPort != null)
+      return false;
+
+    return true;
   }
 
   @Override
   public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (addressComponents != null ? addressComponents.getFormattedAddress() != null ? addressComponents.getFormattedAddress().hashCode() : 0 : 0);
+    int result;
+    long temp;
+    temp = score != +0.0d ? Double.doubleToLongBits(score) : 0L;
+    result = (int) (temp ^ (temp >>> 32));
+    result = 31 * result + (addressComponents != null ? addressComponents.hashCode() : 0);
+    result = 31 * result + (bounds != null ? bounds.hashCode() : 0);
+    result = 31 * result + (viewPort != null ? viewPort.hashCode() : 0);
+    result = 31 * result + (location != null ? location.hashCode() : 0);
+    result = 31 * result + (precision != null ? precision.hashCode() : 0);
+    result = 31 * result + (source != null ? source.hashCode() : 0);
+    result = 31 * result + (licence != null ? licence.hashCode() : 0);
     return result;
+  }
+
+  public String getSource() {
+    return source;
+  }
+
+  public void setSource(String source) {
+    this.source = source;
+  }
+
+  public String getLicence() {
+    return licence;
+  }
+
+  public void setLicence(String licence) {
+    this.licence = licence;
   }
 
   @Override

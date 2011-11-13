@@ -277,6 +277,25 @@ public class Geocoding extends AbstractPolygonDecorator implements Result, Coord
     getDecoratedResult().setScore(score);
   }
 
+  @Override
+  public String getLicence() {
+    return getDecoratedResult().getLicence();
+  }
+
+  @Override
+  public void setLicence(String licence) {
+    getDecoratedResult().setLicence(licence);
+  }
+
+  @Override
+  public String getSource() {
+    return getDecoratedResult().getSource();
+  }
+
+  @Override
+  public void setSource(String source) {
+    getDecoratedResult().setSource(source);
+  }
 }
 
 

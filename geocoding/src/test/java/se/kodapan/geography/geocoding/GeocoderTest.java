@@ -29,16 +29,15 @@ import java.io.File;
  * @author kalle
  * @since 2010-jun-23 02:01:03
  */
-public class TestGeocoder extends TestCase {
+public abstract class GeocoderTest extends TestCase {
 
   private Geocoder geocoder;
 
+  protected abstract Geocoder geocoderFactory();
+
   @Override
   protected void setUp() throws Exception {
-    com.google.maps.geocoding.GoogleGeocoder googleGeocoder = new com.google.maps.geocoding.GoogleGeocoder();
-    googleGeocoder.setCachePath(new File("target/cache/google/geocoder"));
-    googleGeocoder.open();
-    geocoder = new GoogleGeocoder(googleGeocoder);
+    geocoder = geocoderFactory();
   }
 
   @Test
@@ -71,6 +70,10 @@ public class TestGeocoder extends TestCase {
     Geocoding halland = geocoder.geocode("Hallands län, Sverige");
     Geocoding sverige = geocoder.geocode("Sverige");
 
+//    Geocoding halmstad = geocoder.geocode("Halmstad, Hallands län, Sverige");
+//    Geocoding halland = geocoder.geocode("Hallands län, Sverige");
+//    Geocoding sverige = geocoder.geocode("Sverige");
+//
     assertTrue(halmstad.isSuccess());
     assertTrue(halland.isSuccess());
     assertTrue(sverige.isSuccess());

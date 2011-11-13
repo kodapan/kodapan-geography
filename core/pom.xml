@@ -6,11 +6,10 @@
   <parent>
     <groupId>se.kodapan.geography</groupId>
     <artifactId>geography-parent</artifactId>
-    <version>0.2.1</version>
+    <version>0.2.2-SNAPSHOT</version>
   </parent>
   <groupId>se.kodapan.geography</groupId>
   <artifactId>core</artifactId>
-  <version>0.2.1</version>
 
   <packaging>jar</packaging>
 
@@ -18,12 +17,10 @@
     <dependency>
       <groupId>se.kodapan.geography</groupId>
       <artifactId>domain</artifactId>
-      <version>0.2.1</version>
     </dependency>
     <dependency>
       <groupId>se.kodapan.common</groupId>
       <artifactId>collections</artifactId>
-      <version>0.2.2</version>
     </dependency>
   </dependencies>
 
