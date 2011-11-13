@@ -25,7 +25,6 @@ import org.xml.sax.helpers.XMLFilterImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
 import se.kodapan.collections.SetMap;
 import se.kodapan.io.http.HttpGetReader;
-import se.kodapan.lang.Time;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -36,6 +35,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -54,11 +54,11 @@ public class GoogleGeocoder {
 
 
 
-  private long millisecondsBetweenQueries = Time.second;
+  private long millisecondsBetweenQueries = TimeUnit.SECONDS.toMillis(1);
   private long lastRequest = System.currentTimeMillis();
 
   private long queryOverLimitTimeStamp = 0l;
-  private long queryOverLimitDelay = Time.hour;
+  private long queryOverLimitDelay = TimeUnit.HOURS.toMillis(1);
 
   private File cachePath;
 
