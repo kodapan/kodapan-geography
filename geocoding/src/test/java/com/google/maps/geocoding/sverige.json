@@ -1,0 +1,76 @@
+[
+  {
+    "place_id":"79205346",
+    "licence":"Data Copyright OpenStreetMap Contributors, Some Rights Reserved. CC-BY-SA 2.0.",
+    "osm_type":"relation",
+    "osm_id":"52822",
+    "boundingbox":["55.1331176757812","69.0599594116211","10.5944442749023","24.1776828765869"],
+    "lat":"62.3434815304784",
+    "lon":"16.9017388238123",
+    "display_name":"Sverige",
+    "class":"boundary",
+    "type":"administrative",
+    "icon":"http://open.mapquestapi.com/nominatim/v1/images/mapicons/poi_boundary_administrative.p.20.png",
+    "address":{
+      "country":"Sverige",
+      "country_code":"se"
+    }
+  },
+  {
+    "place_id":"4347427",
+    "licence":"Data Copyright OpenStreetMap Contributors, Some Rights Reserved. CC-BY-SA 2.0.",
+    "osm_type":"node",
+    "osm_id":"424313277",
+    "boundingbox":["59.6649687195","59.6849725342","14.510857811","14.5308587646"],
+    "lat":"59.6749716",
+    "lon":"14.5208584",
+    "display_name":"Sverige, Europe",
+    "class":"place",
+    "type":"country",
+    "icon":"http://open.mapquestapi.com/nominatim/v1/images/mapicons/poi_boundary_administrative.p.20.png",
+    "address":{
+      "country":"Sverige",
+      "country_code":"se",
+      "place":"Europe"
+    }
+  },
+  {
+    "place_id":"2164453501",
+    "licence":"Data Copyright OpenStreetMap Contributors, Some Rights Reserved. CC-BY-SA 2.0.",
+    "osm_type":"way",
+    "osm_id":"126452918",
+    "boundingbox":["56.7533149719238","56.7652397155762","9.79295825958252","9.80540466308594"],
+    "lat":"56.7598019537194",
+    "lon":"9.79833960152388",
+    "display_name":"Sverige, Rold, Region Nordjylland, Danmark",
+    "class":"highway",
+    "type":"service",
+    "address":{
+      "road":"Sverige",
+      "village":"Rold",
+      "state":"Region Nordjylland",
+      "country":"Danmark",
+      "country_code":"dk"
+    }
+  },
+  {
+    "place_id":"5417309",
+    "licence":"Data Copyright OpenStreetMap Contributors, Some Rights Reserved. CC-BY-SA 2.0.",
+    "osm_type":"node",
+    "osm_id":"508307411",
+    "boundingbox":["41.9865858459","42.0065896606","21.4189398193","21.4389417267"],
+    "lat":"41.9965861",
+    "lon":"21.4289403",
+    "display_name":"Шведска, 8ма Ударна Бригада, Водно, Скопје, Македонија",
+    "class":"amenity",
+    "type":"embassy",
+    "address":{
+      "amenity":"Шведска",
+      "road":"8ма Ударна Бригада",
+      "suburb":"Водно",
+      "city":"Скопје",
+      "country":"Македонија",
+      "country_code":"mk"
+    }
+  }
+]
