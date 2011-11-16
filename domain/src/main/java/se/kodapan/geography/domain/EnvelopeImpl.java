@@ -15,6 +15,8 @@
  */
 package se.kodapan.geography.domain;
 
+import java.util.Iterator;
+
 /**
  * An envelope that holds two CoordinateImpls, one for southwest and one for northeast.
  *
@@ -36,6 +38,7 @@ public class EnvelopeImpl extends AbstractEnvelope {
     this.southwest = southwest;
     this.northeast = northeast;
   }
+
 
   @Override
   protected void coordinateFactory() {

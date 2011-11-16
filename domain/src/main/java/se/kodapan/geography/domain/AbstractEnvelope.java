@@ -16,7 +16,6 @@
 package se.kodapan.geography.domain;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -35,8 +34,9 @@ public abstract class AbstractEnvelope
     throw new UnsupportedOperationException("Not implemented in " + getClass().getName());
   }
 
+
   public void addBounds(Polygon polygon) {
-    for (Iterator<Coordinate> it = polygon.iterateCoordinates(); it.hasNext();) {
+    for (Iterator<Coordinate> it = polygon.iterateCoordinates(); it.hasNext(); ) {
       Coordinate coordinate = it.next();
       addBounds(coordinate.getLatitude(), coordinate.getLongitude());
     }
@@ -47,6 +47,7 @@ public abstract class AbstractEnvelope
       addBounds(coordinate.getLatitude(), coordinate.getLongitude());
     }
   }
+
   public final void addBounds(Coordinate... coordinates) {
     for (Coordinate coordinate : coordinates) {
       addBounds(coordinate.getLatitude(), coordinate.getLongitude());
@@ -70,9 +71,9 @@ public abstract class AbstractEnvelope
         getSouthwest().setLatitude(latitude);
       }
 
-      if (getNortheast().getLongitude() > longitude) {
+      if (getNortheast().getLongitude() < longitude) {
         getNortheast().setLongitude(longitude);
-      } else if (getSouthwest().getLongitude() < longitude) {
+      } else if (getSouthwest().getLongitude() > longitude) {
         getSouthwest().setLongitude(longitude);
       }
     }
@@ -85,30 +86,61 @@ public abstract class AbstractEnvelope
   }
 
   @Override
-  public boolean contains(Coordinate coordinate) {
+  public boolean contains(Polygon polygon) {
 
-    if (getNortheast().getLongitude() > getSouthwest().getLongitude()) {
-
+    if (getNortheast().getLongitude() < getSouthwest().getLongitude()) {
       // spans international date line
-      // todo these should be transient
-
-      EnvelopeImpl asianSide = new EnvelopeImpl();
-      asianSide.setNortheast(new CoordinateImpl(getNortheast().getLatitude(), 180d));
-      asianSide.setSouthwest(new CoordinateImpl(getSouthwest().getLatitude(), getSouthwest().getLongitude()));
-
-      EnvelopeImpl americanSide = new EnvelopeImpl();
-      asianSide.setNortheast(new CoordinateImpl(getNortheast().getLatitude(), getNortheast().getLongitude()));
-      asianSide.setSouthwest(new CoordinateImpl(getSouthwest().getLatitude(), -180d));
-
-      return asianSide.contains(coordinate) || americanSide.contains(coordinate);
+      EnvelopeImpl asianSide = getAsianSideEnvelope();
+      EnvelopeImpl americanSide = getAmericanSideEnvelope(asianSide);
+      return asianSide.unsafeContains(polygon) || americanSide.unsafeContains(polygon);
 
     } else {
-
-      return coordinate.getLatitude() <= getNortheast().getLatitude()
-          && coordinate.getLongitude() >= getNortheast().getLongitude()
-          && coordinate.getLatitude() >= getSouthwest().getLatitude()
-          && coordinate.getLongitude() <= getSouthwest().getLongitude();
+      return unsafeContains(polygon);
     }
+
+  }
+
+  public boolean unsafeContains(Polygon polygon) {
+    for (Iterator<Coordinate> it = polygon.iterateCoordinates(); it.hasNext(); ) {
+      if (unsafeContains(it.next())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public boolean contains(Coordinate coordinate) {
+    if (getNortheast().getLongitude() < getSouthwest().getLongitude()) {
+      // spans international date line
+      EnvelopeImpl asianSide = getAsianSideEnvelope();
+      EnvelopeImpl americanSide = getAmericanSideEnvelope(asianSide);
+      return asianSide.unsafeContains(coordinate) || americanSide.unsafeContains(coordinate);
+
+    } else {
+      return unsafeContains(coordinate);
+    }
+  }
+
+  private EnvelopeImpl getAmericanSideEnvelope(EnvelopeImpl asianSide) {
+    EnvelopeImpl americanSide = new EnvelopeImpl();
+    asianSide.setNortheast(new CoordinateImpl(getNortheast().getLatitude(), getNortheast().getLongitude()));
+    asianSide.setSouthwest(new CoordinateImpl(getSouthwest().getLatitude(), -180d));
+    return americanSide;
+  }
+
+  private EnvelopeImpl getAsianSideEnvelope() {
+    EnvelopeImpl asianSide = new EnvelopeImpl();
+    asianSide.setNortheast(new CoordinateImpl(getNortheast().getLatitude(), 180d));
+    asianSide.setSouthwest(new CoordinateImpl(getSouthwest().getLatitude(), getSouthwest().getLongitude()));
+    return asianSide;
+  }
+
+  public boolean unsafeContains(Coordinate coordinate) {
+    return getSouthwest().getLatitude() <= coordinate.getLatitude()
+        && getNortheast().getLatitude() >= coordinate.getLatitude()
+        && getNortheast().getLongitude() >= coordinate.getLongitude()
+        && getSouthwest().getLongitude() <= coordinate.getLongitude();
   }
 
 
@@ -139,10 +171,11 @@ public abstract class AbstractEnvelope
 
     Envelope envelope = (Envelope) o;
 
-    if (getNortheast() != null ? !getNortheast().equals(envelope.getNortheast()) : envelope.getNortheast() != null) return false;
-    if (getSouthwest() != null ? !getSouthwest().equals(envelope.getSouthwest()) : envelope.getSouthwest() != null) return false;
+    return envelope.getNortheast().getLatitude().equals(getNortheast().getLatitude())
+        && envelope.getNortheast().getLongitude().equals(getNortheast().getLongitude())
+        && envelope.getSouthwest().getLatitude().equals(getSouthwest().getLatitude())
+        && envelope.getSouthwest().getLongitude().equals(getSouthwest().getLongitude());
 
-    return true;
   }
 
   @Override

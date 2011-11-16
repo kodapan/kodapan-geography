@@ -29,7 +29,6 @@ public class SingleCoordinatePolygonImpl extends AbstractEnvelope implements Sin
 
   private Coordinate coordinate;
 
-
   public SingleCoordinatePolygonImpl(Coordinate coordinate) {
     this.coordinate = coordinate;
   }

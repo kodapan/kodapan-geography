@@ -10,64 +10,14 @@
   <groupId>se.kodapan.geography</groupId>
   <artifactId>geocoding</artifactId>
 
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
 
-  <dependencies>
-    <dependency>
-      <groupId>se.kodapan.geography</groupId>
-      <artifactId>core</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>se.kodapan.common</groupId>
-      <artifactId>misc</artifactId>
-      <version>0.2.2</version>
-    </dependency>
-
-    <dependency>
-      <groupId>json-simple</groupId>
-      <artifactId>json-simple</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-
-
-    <dependency>
-      <scope>test</scope>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>com.sun.jmx</groupId>
-          <artifactId>jmxri</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.sun.jdmk</groupId>
-          <artifactId>jmxtools</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>javax.jms</groupId>
-          <artifactId>jms</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <scope>test</scope>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-    </dependency>
-
-    <dependency>
-      <scope>test</scope>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
-
-
-  </dependencies>
+  <modules>
+    <module>tests</module>
+    <module>core</module>
+    <module>cache</module>
+    <module>google</module>
+    <module>osm</module>
+  </modules>
 
 </project>

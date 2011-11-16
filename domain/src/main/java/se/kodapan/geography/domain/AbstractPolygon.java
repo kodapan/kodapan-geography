@@ -25,6 +25,13 @@ public abstract class AbstractPolygon implements Polygon {
 
   private static final long serialVersionUID = 1l;
 
+  // todo something better
+  @Override
+  public boolean contains(Polygon polygon) {
+    Envelope envelope = new EnvelopeImpl();
+    envelope.addBounds(this);
+    return envelope.contains(polygon);
+  }
 
 
   @Override
@@ -97,7 +104,7 @@ public abstract class AbstractPolygon implements Polygon {
       return 0d;
     }
     double closest = Double.MAX_VALUE;
-    for (Iterator<Coordinate> it = iterateCoordinates(); it.hasNext();) {
+    for (Iterator<Coordinate> it = iterateCoordinates(); it.hasNext(); ) {
       Coordinate coordinate = it.next();
       double distance = Coordinate.CoordinateTools.arcDistance(coordinate, that);
       if (distance < closest) {
@@ -107,24 +114,15 @@ public abstract class AbstractPolygon implements Polygon {
     return closest;
   }
 
-  @Override
-  public boolean contains(Polygon that) {
-    for (Iterator<Coordinate> it = that.iterateCoordinates(); it.hasNext();) {
-      if (!this.contains(it.next())) {
-        return false;
-      }
-    }
-    return true;
-  }
 
   public final double arcDistance(Polygon that) {
     if (contains(that) || that.contains(this)) {
       return 0d;
     }
     double closest = Double.MAX_VALUE;
-    for (Iterator<Coordinate> it = iterateCoordinates(); it.hasNext();) {
+    for (Iterator<Coordinate> it = iterateCoordinates(); it.hasNext(); ) {
       Coordinate coordinate = it.next();
-      for (Iterator<Coordinate> itThat = that.iterateCoordinates(); itThat.hasNext();) {
+      for (Iterator<Coordinate> itThat = that.iterateCoordinates(); itThat.hasNext(); ) {
         Coordinate coordinateThat = itThat.next();
         double distance = Coordinate.CoordinateTools.arcDistance(coordinate, coordinateThat);
         if (distance < closest) {

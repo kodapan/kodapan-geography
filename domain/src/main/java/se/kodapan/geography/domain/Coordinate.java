@@ -30,6 +30,9 @@ public interface Coordinate extends Serializable {
   public abstract Double getLongitude();
   public abstract void setLongitude(Double longitude);
 
+  @Override
+  public abstract boolean equals(Object o);
+
   /**
    *
    * @param that
