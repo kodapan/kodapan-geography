@@ -39,7 +39,6 @@ public abstract class AbstractCoordinate implements Coordinate {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || !(o instanceof Coordinate)) return false;
-    if (!super.equals(o)) return false;
 
     Coordinate that = (Coordinate) o;
 
