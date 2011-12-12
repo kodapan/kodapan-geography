@@ -4,7 +4,7 @@ import geocoding.GeocoderTest;
 import se.kodapan.geography.domain.CoordinateImpl;
 import se.kodapan.geography.geocoding.CoordinateQuery;
 import se.kodapan.geography.geocoding.Geocoder;
-import se.kodapan.geography.geocoding.Geocoding;
+import se.kodapan.geography.geocoding.geocoding.Geocoding;
 
 /**
  * @author kalle

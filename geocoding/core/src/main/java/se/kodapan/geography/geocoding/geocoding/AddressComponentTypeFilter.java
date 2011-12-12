@@ -1,6 +1,7 @@
-package se.kodapan.geography.geocoding;
+package se.kodapan.geography.geocoding.geocoding;
 
 import se.kodapan.geography.domain.*;
+import se.kodapan.geography.geocoding.postprocessing.filter.ResponseFilter;
 
 
 import java.util.Iterator;

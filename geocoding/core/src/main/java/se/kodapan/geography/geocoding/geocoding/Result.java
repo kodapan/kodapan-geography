@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package se.kodapan.geography.geocoding;
+package se.kodapan.geography.geocoding.geocoding;
 
 import se.kodapan.geography.domain.Coordinate;
 import se.kodapan.geography.domain.Envelope;

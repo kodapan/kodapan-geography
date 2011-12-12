@@ -3,6 +3,7 @@ package se.kodapan.geography.geocoding;
 import com.sleepycat.persist.EntityCursor;
 import se.kodapan.collections.ScoreMap;
 import se.kodapan.geography.domain.Coordinate;
+import se.kodapan.geography.geocoding.geocoding.Geocoding;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

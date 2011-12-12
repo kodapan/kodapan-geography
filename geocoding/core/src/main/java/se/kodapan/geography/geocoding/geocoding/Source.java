@@ -1,4 +1,4 @@
-package se.kodapan.geography.geocoding;
+package se.kodapan.geography.geocoding.geocoding;
 
 import java.io.Serializable;
 

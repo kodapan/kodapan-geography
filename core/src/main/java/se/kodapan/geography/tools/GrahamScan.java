@@ -22,7 +22,7 @@ import java.util.*;
 
 /**
  * http://en.wikipedia.org/wiki/Graham_scan
- *
+ * <p/>
  * This is an adaptation of the CompGeom implementation by Bart Kiers, bart@big-o.nl
  *
  * @author kalle
@@ -33,12 +33,12 @@ public class GrahamScan extends ConvexHull {
   private static final long serialVersionUID = 1l;
 
   @Override
-  public PolygonImpl factory(Set<Coordinate> coordinates) {
+  public PolygonImpl factory(Set<Coordinate> coordinates) throws TooFewCoordinatesException {
 
     long ms = System.currentTimeMillis();
 
     if (coordinates.size() < 3) {
-      throw new IllegalArgumentException("Need at least 3 points to create a convex hull!");
+      throw new TooFewCoordinatesException("At least 3 coordinates are required to create a convex hull.");
     }
 
     List<Coordinate> sortedCoordinates = new ArrayList<Coordinate>(coordinates);
@@ -79,6 +79,11 @@ public class GrahamScan extends ConvexHull {
         sortedCoordinates.remove(i - 1);
       }
     }
+
+    if (sortedCoordinates.size() < 3) {
+      throw new TooFewCoordinatesException("At least three coordinates are required to create a convex hull. The coordinates supplied are after a removal of collinear coordinates add up to " + sortedCoordinates.size());
+    }
+
 
     LinkedList<Coordinate> stack = new LinkedList<Coordinate>();
     for (int i = 0; i < 3; i++) {

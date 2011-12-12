@@ -51,8 +51,7 @@ public abstract class AbstractCoordinate implements Coordinate {
 
   @Override
   public int hashCode() {
-    int result = super.hashCode();
-    result = 31 * result + (getLatitude() != null ? getLatitude().hashCode() : 0);
+    int result = getLatitude() != null ? getLatitude().hashCode() : 0;
     result = 31 * result + (getLongitude() != null ? getLongitude().hashCode() : 0);
     return result;
   }

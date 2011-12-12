@@ -13,10 +13,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package se.kodapan.geography.geocoding;
+package se.kodapan.geography.geocoding.postprocessing.filter;
 
 import se.kodapan.geography.domain.Coordinate;
 import se.kodapan.geography.domain.Polygon;
+import se.kodapan.geography.geocoding.geocoding.Geocoding;
+import se.kodapan.geography.geocoding.geocoding.Result;
+import se.kodapan.geography.geocoding.geocoding.ResultVisitor;
 
 import java.util.Arrays;
 import java.util.HashSet;

@@ -21,6 +21,11 @@ import org.junit.Test;
 import se.kodapan.geography.domain.CoordinateImpl;
 import se.kodapan.geography.domain.PolygonTools;
 import se.kodapan.geography.geocoding.*;
+import se.kodapan.geography.geocoding.postprocessing.filter.MergeSameHouseResultsFilter;
+import se.kodapan.geography.geocoding.geocoding.AddressComponentsScorer;
+import se.kodapan.geography.geocoding.geocoding.Geocoding;
+import se.kodapan.geography.geocoding.postprocessing.scorer.ProximityScorer;
+import se.kodapan.geography.geocoding.postprocessing.scorer.ThreadsholdScorer;
 
 /**
  * @author kalle

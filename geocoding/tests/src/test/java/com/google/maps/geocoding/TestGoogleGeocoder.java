@@ -3,7 +3,7 @@ package com.google.maps.geocoding;
 import se.kodapan.geography.geocoding.CoordinateQuery;
 import se.kodapan.geography.geocoding.Geocoder;
 import geocoding.GeocoderTest;
-import se.kodapan.geography.geocoding.Geocoding;
+import se.kodapan.geography.geocoding.geocoding.Geocoding;
 import se.kodapan.geography.domain.CoordinateImpl;
 
 /**

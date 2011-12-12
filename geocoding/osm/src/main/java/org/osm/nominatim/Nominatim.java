@@ -6,6 +6,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import se.kodapan.geography.domain.*;
 import se.kodapan.geography.geocoding.*;
+import se.kodapan.geography.geocoding.geocoding.Geocoding;
+import se.kodapan.geography.geocoding.geocoding.Result;
+import se.kodapan.geography.geocoding.geocoding.ResultImpl;
 
 import java.io.*;
 import java.net.URL;

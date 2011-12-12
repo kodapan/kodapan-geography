@@ -17,7 +17,10 @@ package se.kodapan.geography.geocoding;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.kodapan.geography.domain.Coordinate;
+import se.kodapan.geography.geocoding.geocoding.Geocoding;
+import se.kodapan.geography.geocoding.geocoding.Source;
+import se.kodapan.geography.geocoding.leniency.Leniency;
+import se.kodapan.geography.geocoding.leniency.NoLeniency;
 
 import java.io.InputStream;
 
@@ -28,6 +31,16 @@ import java.io.InputStream;
 public abstract class Geocoder {
 
   protected static final Logger log = LoggerFactory.getLogger(Geocoder.class);
+
+  private Leniency leniency = new NoLeniency();
+
+  public Leniency getLeniency() {
+    return leniency;
+  }
+
+  public void setLeniency(Leniency leniency) {
+    this.leniency = leniency;
+  }
 
   /**
    * @return the number of results possible to get using this geocoder.

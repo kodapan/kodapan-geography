@@ -68,5 +68,4 @@ public class CoordinateImpl extends AbstractCoordinate {
     this.longitude = longitude;
   }
 
-
 }

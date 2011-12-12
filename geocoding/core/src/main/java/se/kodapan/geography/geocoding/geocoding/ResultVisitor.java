@@ -13,15 +13,19 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package se.kodapan.geography.geocoding;
+package se.kodapan.geography.geocoding.geocoding;
+
+import se.kodapan.geography.domain.Coordinate;
+import se.kodapan.geography.domain.Polygon;
 
 /**
  * @author kalle
- * @since 2010-jun-26 01:42:41
+ * @since 2010-jun-24 14:13:59
  */
-public abstract class AbstractResult implements Result {
+public interface ResultVisitor<T> {
 
-  private static final long serialVersionUID = 1l;  
+  public abstract T visit(Coordinate location);
+  public abstract T visit(Polygon bounds);
 
   
 }

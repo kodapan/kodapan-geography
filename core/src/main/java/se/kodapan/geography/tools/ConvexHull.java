@@ -29,7 +29,7 @@ public abstract class ConvexHull implements Serializable {
 
   private static final long serialVersionUID = 1l;
 
-  public abstract Polygon factory(Set<Coordinate> coordinates);
+  public abstract Polygon factory(Set<Coordinate> coordinates) throws TooFewCoordinatesException;
 
 
 }

@@ -27,7 +27,6 @@ public class EnvelopeImpl extends AbstractEnvelope {
 
   private static final long serialVersionUID = 1l;
 
-
   private Coordinate southwest;
   private Coordinate northeast;
 

@@ -18,11 +18,12 @@ package se.kodapan.geography.geocoding;
 import com.google.maps.geocoding.AddressComponent;
 import com.google.maps.geocoding.GeocodeResponse;
 import com.google.maps.geocoding.LatLng;
-import com.google.maps.geocoding.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import se.kodapan.geography.domain.*;
+import se.kodapan.geography.geocoding.geocoding.Geocoding;
+import se.kodapan.geography.geocoding.geocoding.ResultImpl;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -21,20 +21,21 @@ public class Circle extends AbstractPolygon {
   public static Circle factory(Collection<Coordinate> coordinates, int circumferenceResolution) {
     if (coordinates.size() < 2) {
       throw new IllegalArgumentException("Expected at least two coordinates");
-    }
-    EnvelopeImpl envelope = new EnvelopeImpl();
-    for (Coordinate coordinate : coordinates) {
-      envelope.addBounds(coordinate);
-    }
-    Coordinate centroid = new CoordinateImpl(envelope.getCentroid());
-    double longestDistanceFromCentroid = Double.MIN_VALUE;
-    for (Coordinate coordinate : coordinates) {
-      double distance = centroid.arcDistance(coordinate);
-      if (distance > longestDistanceFromCentroid) {
-        longestDistanceFromCentroid = distance;
+    } else {
+      EnvelopeImpl envelope = new EnvelopeImpl();
+      for (Coordinate coordinate : coordinates) {
+        envelope.addBounds(coordinate);
       }
+      Coordinate centroid = new CoordinateImpl(envelope.getCentroid());
+      double longestDistanceFromCentroid = Double.MIN_VALUE;
+      for (Coordinate coordinate : coordinates) {
+        double distance = centroid.arcDistance(coordinate);
+        if (distance > longestDistanceFromCentroid) {
+          longestDistanceFromCentroid = distance;
+        }
+      }
+      return new Circle(longestDistanceFromCentroid, centroid, circumferenceResolution);
     }
-    return new Circle(longestDistanceFromCentroid, centroid, circumferenceResolution);
   }
 
   private double radiusKilometers;
@@ -58,9 +59,9 @@ public class Circle extends AbstractPolygon {
     double radiusLatitude = (radiusKilometers / 6378.8d) * (180 / Math.PI);
     double radiusLongitude = radiusLatitude / Math.cos(centroid.getLatitude() * (Math.PI / 180));
 
-    int step = (int)(360d / (double)circumferenceResolution);
+    int step = (int) (360d / (double) circumferenceResolution);
 //    for (int i = 0; i <= 361; i+= step) {
-    for (int i = 0; i < 360; i+= step) {
+    for (int i = 0; i < 360; i += step) {
       double a = i * (Math.PI / 180);
       double latitude = centroid.getLatitude() + (radiusLatitude * Math.sin(a));
       double longitude = centroid.getLongitude() + (radiusLongitude * Math.cos(a));
