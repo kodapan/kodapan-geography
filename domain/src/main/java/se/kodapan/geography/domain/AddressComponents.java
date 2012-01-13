@@ -50,6 +50,20 @@ public class AddressComponents extends ArrayList<AddressComponent> implements Se
     this.typeIndex = typeIndex;
   }
 
+  public boolean removeByType(String... types) {
+    boolean response = false;
+    for (String type : types) {
+      Set<AddressComponent> components = getTypeIndex().get(type);
+      if (components != null) {
+        boolean removed = removeAll(components);
+        if (!response && removed) {
+          response = true;
+        }
+      }
+    }
+    return response;
+  }
+
   @Override
   public boolean removeAll(Collection<?> objects) {
     boolean success = super.removeAll(objects);
