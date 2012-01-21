@@ -142,7 +142,7 @@ public class Nominatim extends Geocoder {
 
     String licence = ((String) jsonResult.remove("licence"));
     result.getSource().setLicense(licence);
-
+    // todo place_id can be a string error message, at least if reverse geocoding out of area
     Number placeIdentity = Long.valueOf(((String) jsonResult.remove("place_id")));
     String placeClass = ((String) jsonResult.remove("class"));
     String placeType = ((String) jsonResult.remove("type"));

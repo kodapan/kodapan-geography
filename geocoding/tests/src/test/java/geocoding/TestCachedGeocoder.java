@@ -1,10 +1,9 @@
 package geocoding;
 
-import org.apache.commons.io.IOUtils;
 import org.osm.nominatim.Nominatim;
+import se.kodapan.geography.domain.CoordinateImpl;
 import se.kodapan.geography.geocoding.CachedGeocoder;
-import se.kodapan.geography.geocoding.Geocoder;
-import se.kodapan.io.IOUtil;
+import se.kodapan.geography.geocoding.CoordinateQuery;
 
 import java.io.File;
 
@@ -27,10 +26,25 @@ public class TestCachedGeocoder extends GeocoderTest {
 
   @Override
   public void test() throws Exception {
-    super.test();
-    // now run again with and make sure it's all cached.
+
+    // todo test some
     geocoder.setUseCacheOnly(true);
-    super.test();
+    // todo now run again with and make sure it's all cached.
+    geocoder.setUseCacheOnly(false);
+
+    try {
+      geocoder.reverse(new CoordinateQuery().setCoordinate(new CoordinateImpl(333, 444)));
+      fail();
+    } catch (Exception e) {
+      // all good
+    }
+    geocoder.setUseCacheOnly(true);
+    try {
+      geocoder.reverse(new CoordinateQuery().setCoordinate(new CoordinateImpl(333, 444)));
+      fail();
+    } catch (Exception e) {
+      // all good
+    }
   }
 
   @Override

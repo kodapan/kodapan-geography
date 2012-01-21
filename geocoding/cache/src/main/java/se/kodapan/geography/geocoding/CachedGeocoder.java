@@ -118,6 +118,9 @@ public class CachedGeocoder extends Geocoder {
       CachedGeocoding cachedGeocoding = scoreMap.getHits()[0].getKey();
       Geocoding geocoding = decorated.parseReverseServerResponse(new ByteArrayInputStream(cachedGeocoding.getServerResponse().getBytes("UTF8")));
       log.info("Returning cached geocoding after " + (System.currentTimeMillis() - started) + " milliseconds.");
+      if (geocoding.getServerResponse() == null) {
+        throw new Exception("Cached request exception from geocoder!");
+      }
       return geocoding;
     }
 
@@ -125,7 +128,25 @@ public class CachedGeocoder extends Geocoder {
       return null;
     }
 
-    Geocoding geocoding = decorated.reverse(query);
+
+
+    Geocoding geocoding;
+    try {
+      geocoding = decorated.reverse(query);
+    } catch (Exception e) {
+
+      CachedGeocoding cachedGeocoding = new CachedGeocoding();
+      cachedGeocoding.setGeocoder(decorated.getName());
+      cachedGeocoding.setGeocoderVersion(decorated.getVersion());
+      cachedGeocoding.setLicense(decorated.getDefaultLicense());
+      cachedGeocoding.setServerResponse(null);
+      cachedGeocoding.setQuery(stringQuery);
+
+      cacheStore.getCachedGeocodings().put(cachedGeocoding);
+      log.info("Caching request exception after " + (System.currentTimeMillis() - started) + " milliseconds.");
+
+      throw e;
+    }
 
     CachedGeocoding cachedGeocoding = new CachedGeocoding();
     cachedGeocoding.setGeocoder(geocoding.getSource().getName());
