@@ -12,7 +12,7 @@ import java.util.UUID;
  * @author kalle
  * @since 2011-11-15 23:40
  */
-@Entity(version = 1)
+@Entity(version = 2)
 public class CachedGeocoding {
 
   @PrimaryKey
@@ -30,7 +30,29 @@ public class CachedGeocoding {
 
   private String serverResponse;
 
+  private CachedGeocoderException exception;
 
+  @Override
+  public String toString() {
+    return "CachedGeocoding{" +
+        "identity='" + identity + '\'' +
+        ", created=" + created +
+        ", license='" + license + '\'' +
+        ", geocoder='" + geocoder + '\'' +
+        ", geocoderVersion='" + geocoderVersion + '\'' +
+        ", query='" + query + '\'' +
+        ", exception=" + exception +
+        ", serverResponse='" + serverResponse + '\'' +
+        '}';
+  }
+
+  public CachedGeocoderException getException() {
+    return exception;
+  }
+
+  public void setException(CachedGeocoderException exception) {
+    this.exception = exception;
+  }
 
   public String getQuery() {
     return query;

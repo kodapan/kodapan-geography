@@ -1,6 +1,8 @@
 package se.kodapan.geography.geocoding;
 
 import com.sleepycat.persist.EntityCursor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.kodapan.collections.ScoreMap;
 import se.kodapan.geography.domain.Coordinate;
 import se.kodapan.geography.geocoding.geocoding.Geocoding;
@@ -16,8 +18,13 @@ import java.util.Iterator;
  */
 public class CachedGeocoder extends Geocoder {
 
+  private static final Logger log = LoggerFactory.getLogger(CachedGeocoder.class);
   private Geocoder decorated;
   private File path;
+
+  private boolean useCacheOnly = false;
+  private boolean cachingExceptions = false;
+  private boolean useCachedExceptions = false;
 
   public CachedGeocoder(Geocoder decorated, File path) {
     this.decorated = decorated;
@@ -53,7 +60,6 @@ public class CachedGeocoder extends Geocoder {
   }
 
 
-
   public String queryFactory(CoordinateQuery query) {
     StringBuilder sb = new StringBuilder(1024);
     sb.append("coordinate");
@@ -87,7 +93,22 @@ public class CachedGeocoder extends Geocoder {
     return decorated.getMaximumResultsReturned();
   }
 
-  private boolean useCacheOnly = false;
+
+  public boolean isCachingExceptions() {
+    return cachingExceptions;
+  }
+
+  public void setCachingExceptions(boolean cachingExceptions) {
+    this.cachingExceptions = cachingExceptions;
+  }
+
+  public boolean isUseCachedExceptions() {
+    return useCachedExceptions;
+  }
+
+  public void setUseCachedExceptions(boolean useCachedExceptions) {
+    this.useCachedExceptions = useCachedExceptions;
+  }
 
   public boolean isUseCacheOnly() {
     return useCacheOnly;
@@ -108,7 +129,13 @@ public class CachedGeocoder extends Geocoder {
     try {
       CachedGeocoding cachedGeocoding;
       while ((cachedGeocoding = cursor.next()) != null) {
-        scoreMap.increase(cachedGeocoding, cachedGeocoding.getCreated().getTime());
+        if (cachedGeocoding.getException() != null) {
+          if (isUseCachedExceptions()) {
+            scoreMap.increase(cachedGeocoding, cachedGeocoding.getCreated().getTime());
+          }
+        } else {
+          scoreMap.increase(cachedGeocoding, cachedGeocoding.getCreated().getTime());
+        }
       }
     } finally {
       cursor.close();
@@ -117,10 +144,10 @@ public class CachedGeocoder extends Geocoder {
     if (!scoreMap.isEmpty()) {
       CachedGeocoding cachedGeocoding = scoreMap.getHits()[0].getKey();
       Geocoding geocoding = decorated.parseReverseServerResponse(new ByteArrayInputStream(cachedGeocoding.getServerResponse().getBytes("UTF8")));
-      log.info("Returning cached geocoding after " + (System.currentTimeMillis() - started) + " milliseconds.");
-      if (geocoding.getServerResponse() == null) {
-        throw new Exception("Cached request exception from geocoder!");
+      if (cachedGeocoding.getException() != null) {
+        throw cachedGeocoding.getException().toException(new Exception("Cached request exception: " + cachedGeocoding));
       }
+      log.info("Returning cached geocoding after " + (System.currentTimeMillis() - started) + " milliseconds.");
       return geocoding;
     }
 
@@ -129,23 +156,25 @@ public class CachedGeocoder extends Geocoder {
     }
 
 
-
     Geocoding geocoding;
     try {
       geocoding = decorated.reverse(query);
-    } catch (Exception e) {
+    } catch (Exception exception) {
 
-      CachedGeocoding cachedGeocoding = new CachedGeocoding();
-      cachedGeocoding.setGeocoder(decorated.getName());
-      cachedGeocoding.setGeocoderVersion(decorated.getVersion());
-      cachedGeocoding.setLicense(decorated.getDefaultLicense());
-      cachedGeocoding.setServerResponse(null);
-      cachedGeocoding.setQuery(stringQuery);
+      if (cachingExceptions) {
+        CachedGeocoding cachedGeocoding = new CachedGeocoding();
+        cachedGeocoding.setGeocoder(decorated.getName());
+        cachedGeocoding.setGeocoderVersion(decorated.getVersion());
+        cachedGeocoding.setLicense(decorated.getDefaultLicense());
+        cachedGeocoding.setServerResponse(null);
+        cachedGeocoding.setQuery(stringQuery);
+        cachedGeocoding.setException(new CachedGeocoderException(exception));
 
-      cacheStore.getCachedGeocodings().put(cachedGeocoding);
-      log.info("Caching request exception after " + (System.currentTimeMillis() - started) + " milliseconds.");
+        cacheStore.getCachedGeocodings().put(cachedGeocoding);
+        log.info("Caching request exception after " + (System.currentTimeMillis() - started) + " milliseconds.");
+      }
 
-      throw e;
+      throw exception;
     }
 
     CachedGeocoding cachedGeocoding = new CachedGeocoding();
@@ -189,7 +218,25 @@ public class CachedGeocoder extends Geocoder {
       return null;
     }
 
-    Geocoding geocoding = decorated.geocode(query);
+    Geocoding geocoding;
+    try {
+      geocoding = decorated.geocode(query);
+    } catch (Exception exception) {
+      if (cachingExceptions) {
+
+        CachedGeocoding cachedGeocoding = new CachedGeocoding();
+        cachedGeocoding.setGeocoder(decorated.getName());
+        cachedGeocoding.setGeocoderVersion(decorated.getVersion());
+        cachedGeocoding.setLicense(decorated.getDefaultLicense());
+        cachedGeocoding.setServerResponse(null);
+        cachedGeocoding.setQuery(stringQuery);
+        cachedGeocoding.setException(new CachedGeocoderException(exception));
+        cacheStore.getCachedGeocodings().put(cachedGeocoding);
+        log.info("Caching request exception after " + (System.currentTimeMillis() - started) + " milliseconds.");
+
+      }
+      throw exception;
+    }
 
     CachedGeocoding cachedGeocoding = new CachedGeocoding();
     cachedGeocoding.setGeocoder(getName());
@@ -233,4 +280,11 @@ public class CachedGeocoder extends Geocoder {
   }
 
 
+  public Geocoder getDecorated() {
+    return decorated;
+  }
+
+  public File getPath() {
+    return path;
+  }
 }
