@@ -1,4 +1,4 @@
-package com.google.maps.geocoding;
+package se.kodapan.geography.geocoding.google;
 
 import java.io.IOException;
 

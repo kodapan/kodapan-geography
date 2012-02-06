@@ -15,9 +15,9 @@
  */
 package se.kodapan.geography.geocoding;
 
-import com.google.maps.geocoding.AddressComponent;
-import com.google.maps.geocoding.GeocodeResponse;
-import com.google.maps.geocoding.LatLng;
+import se.kodapan.geography.geocoding.google.AddressComponent;
+import se.kodapan.geography.geocoding.google.GeocodeResponse;
+import se.kodapan.geography.geocoding.google.LatLng;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,15 +35,15 @@ import java.io.InputStream;
 public class GoogleGeocoder extends Geocoder {
 
   private static final Logger log = LoggerFactory.getLogger(GoogleGeocoder.class);
-  private static com.google.maps.geocoding.GoogleGeocoder defaultGeocoder = new com.google.maps.geocoding.GoogleGeocoder();
+  private static se.kodapan.geography.geocoding.google.GoogleGeocoder defaultGeocoder = new se.kodapan.geography.geocoding.google.GoogleGeocoder();
 
-  private com.google.maps.geocoding.GoogleGeocoder geocoder;
+  private se.kodapan.geography.geocoding.google.GoogleGeocoder geocoder;
 
   public GoogleGeocoder() {
     this.geocoder = defaultGeocoder;
   }
 
-  public GoogleGeocoder(com.google.maps.geocoding.GoogleGeocoder geocoder) {
+  public GoogleGeocoder(se.kodapan.geography.geocoding.google.GoogleGeocoder geocoder) {
     this.geocoder = geocoder;
   }
 
@@ -70,7 +70,7 @@ public class GoogleGeocoder extends Geocoder {
   public Geocoding reverse(CoordinateQuery query) throws Exception {
 
     // create request
-    com.google.maps.geocoding.Request googleRequest = new com.google.maps.geocoding.Request();
+    se.kodapan.geography.geocoding.google.Request googleRequest = new se.kodapan.geography.geocoding.google.Request();
     googleRequest.setLatLng(new LatLng(query.getCoordinate().getLatitude(), query.getCoordinate().getLongitude()));
     googleRequest.setLanguage(query.getPreferredResponseLanguage());
 
@@ -88,13 +88,13 @@ public class GoogleGeocoder extends Geocoder {
 
 
     // create request
-    com.google.maps.geocoding.Request googleRequest = new com.google.maps.geocoding.Request();
+    se.kodapan.geography.geocoding.google.Request googleRequest = new se.kodapan.geography.geocoding.google.Request();
     googleRequest.setAddress(query.getText());
     googleRequest.setLanguage(query.getText());
     if (query.getBounds() != null) {
       EnvelopeImpl envelope = new EnvelopeImpl();
       envelope.addBounds(query.getBounds());
-      googleRequest.setBounds(new com.google.maps.geocoding.Envelope(
+      googleRequest.setBounds(new se.kodapan.geography.geocoding.google.Envelope(
           new LatLng(envelope.getSouthwest().getLatitude(), envelope.getSouthwest().getLongitude()),
           new LatLng(envelope.getNortheast().getLatitude(), envelope.getNortheast().getLongitude())));
     }
@@ -103,7 +103,7 @@ public class GoogleGeocoder extends Geocoder {
 
   }
 
-  private Geocoding sendRequest(com.google.maps.geocoding.Request googleRequest) throws IOException {
+  private Geocoding sendRequest(se.kodapan.geography.geocoding.google.Request googleRequest) throws IOException {
     return parseServerResponse(geocoder.geocode(googleRequest));
   }
 
@@ -122,7 +122,7 @@ public class GoogleGeocoder extends Geocoder {
   }
 
   private void parseResponse(Geocoding geocoding, GeocodeResponse googleResponse) {
-    for (com.google.maps.geocoding.Result googleResult : googleResponse.getResults()) {
+    for (se.kodapan.geography.geocoding.google.Result googleResult : googleResponse.getResults()) {
 
       // todo do something with partial matches
 //      if (googleResult.isPartialMatch()) {
@@ -179,7 +179,7 @@ public class GoogleGeocoder extends Geocoder {
 
 
 
-  public com.google.maps.geocoding.GoogleGeocoder getGeocoder() {
+  public se.kodapan.geography.geocoding.google.GoogleGeocoder getGeocoder() {
     return geocoder;
   }
 

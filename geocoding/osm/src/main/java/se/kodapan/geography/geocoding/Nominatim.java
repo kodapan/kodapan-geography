@@ -1,11 +1,12 @@
-package org.osm.nominatim;
+package se.kodapan.geography.geocoding;
 
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import se.kodapan.geography.domain.*;
-import se.kodapan.geography.geocoding.*;
 import se.kodapan.geography.geocoding.geocoding.Geocoding;
 import se.kodapan.geography.geocoding.geocoding.Result;
 import se.kodapan.geography.geocoding.geocoding.ResultImpl;
@@ -26,6 +27,7 @@ import java.util.Set;
  */
 public class Nominatim extends Geocoder {
 
+  private static final Logger log = LoggerFactory.getLogger(Nominatim.class);
   private String emailAddress;
 
   @Override
@@ -175,7 +177,7 @@ public class Nominatim extends Geocoder {
     JSONArray polygonPoints = (JSONArray) jsonResult.remove("polygonpoints");
     if (polygonPoints != null) {
       if (result.getBounds() != null) {
-        log.error("Both boundingbox and polygon in response! What does this mean? Using polygon.");
+        log.warn("Both boundingbox and polygon in response! What does this mean? Using polygon.");
       }
       List<Coordinate> polygonCoordinates = new ArrayList<Coordinate>(polygonPoints.size());
       for (int ppsi = 0; ppsi < polygonPoints.size(); ppsi++) {

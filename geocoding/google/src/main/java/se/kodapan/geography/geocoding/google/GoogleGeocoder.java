@@ -13,7 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package com.google.maps.geocoding;
+package se.kodapan.geography.geocoding.google;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -26,7 +26,6 @@ import org.xml.sax.helpers.XMLFilterImpl;
 import org.xml.sax.helpers.XMLReaderFactory;
 import se.kodapan.collections.SetMap;
 import se.kodapan.io.http.HttpGetInputStream;
-import se.kodapan.io.http.HttpGetReader;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -39,8 +38,6 @@ import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 /**
  * http://code.google.com/intl/sv-SE/apis/maps/documentation/geocoding/index.html#XMLParsing

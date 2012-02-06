@@ -1,6 +1,6 @@
 package geocoding;
 
-import org.osm.nominatim.Nominatim;
+import se.kodapan.geography.geocoding.Nominatim;
 import se.kodapan.geography.domain.CoordinateImpl;
 import se.kodapan.geography.geocoding.CachedGeocoder;
 import se.kodapan.geography.geocoding.CoordinateQuery;
@@ -27,6 +27,9 @@ public class TestCachedGeocoder extends GeocoderTest {
   @Override
   public void test() throws Exception {
 
+    geocoder.setCachingExceptions(true);
+    geocoder.setUseCachedExceptions(true);
+
     // todo test some
     geocoder.setUseCacheOnly(true);
     // todo now run again with and make sure it's all cached.
@@ -37,6 +40,7 @@ public class TestCachedGeocoder extends GeocoderTest {
       fail();
     } catch (Exception e) {
       // all good
+      e.printStackTrace();
     }
     geocoder.setUseCacheOnly(true);
     try {
@@ -44,6 +48,7 @@ public class TestCachedGeocoder extends GeocoderTest {
       fail();
     } catch (Exception e) {
       // all good
+      e.printStackTrace();
     }
   }
 

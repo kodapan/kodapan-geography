@@ -30,7 +30,7 @@ import java.io.InputStream;
  */
 public abstract class Geocoder {
 
-  protected static final Logger log = LoggerFactory.getLogger(Geocoder.class);
+  private static final Logger log = LoggerFactory.getLogger(Geocoder.class);
 
   private Leniency leniency = new NoLeniency();
 
