@@ -177,7 +177,8 @@ public class Nominatim extends Geocoder {
     JSONArray polygonPoints = (JSONArray) jsonResult.remove("polygonpoints");
     if (polygonPoints != null) {
       if (result.getBounds() != null) {
-        log.warn("Both boundingbox and polygon in response! What does this mean? Using polygon.");
+        // according to the osm irc this means that the bounding box enclose the polygon
+        log.info("Both boundingbox and polygon in response, using the latter");
       }
       List<Coordinate> polygonCoordinates = new ArrayList<Coordinate>(polygonPoints.size());
       for (int ppsi = 0; ppsi < polygonPoints.size(); ppsi++) {
