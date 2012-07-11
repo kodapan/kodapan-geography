@@ -171,7 +171,7 @@ public class Nominatim extends Geocoder {
 
     JSONArray boundingBox = (JSONArray) jsonResult.remove("boundingbox");
     if (boundingBox != null) {
-      result.setBounds(new EnvelopeImpl(new CoordinateImpl(Double.valueOf((String) boundingBox.get(0)), Double.valueOf((String) boundingBox.get(2))), new CoordinateImpl(Double.valueOf((String) boundingBox.get(1)), Double.valueOf((String) boundingBox.get(3)))));
+      result.setBounds(new EnvelopeImpl(new CoordinateImpl(Double.valueOf(boundingBox.get(0).toString()), Double.valueOf(boundingBox.get(2).toString())), new CoordinateImpl(Double.valueOf(boundingBox.get(1).toString()), Double.valueOf(boundingBox.get(3).toString()))));
     }
 
     JSONArray polygonPoints = (JSONArray) jsonResult.remove("polygonpoints");
